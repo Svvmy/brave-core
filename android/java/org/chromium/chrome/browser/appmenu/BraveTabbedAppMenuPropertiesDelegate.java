@@ -43,6 +43,7 @@ import org.chromium.chrome.browser.tabmodel.TabModelSelector;
 import org.chromium.chrome.browser.toolbar.ToolbarManager;
 import org.chromium.chrome.browser.toolbar.bottom.BottomToolbarConfiguration;
 import org.chromium.chrome.browser.toolbar.menu_button.BraveMenuButtonCoordinator;
+import org.chromium.chrome.browser.toolbar.top.BraveToolbarLayoutImpl;
 import org.chromium.chrome.browser.ui.appmenu.AppMenuDelegate;
 import org.chromium.chrome.browser.ui.appmenu.AppMenuHandler;
 import org.chromium.chrome.browser.ui.messages.snackbar.SnackbarManager;
@@ -181,6 +182,22 @@ public class BraveTabbedAppMenuPropertiesDelegate extends TabbedAppMenuPropertie
             }
         }
 
+        MenuItem addToPlaylist = menu.findItem(R.id.add_to_playlist_id);
+        if (addToPlaylist != null) {
+            if (ChromeFeatureList.isEnabled(BraveFeatureList.BRAVE_PLAYLIST)
+                    && SharedPreferencesManager.getInstance().readBoolean(
+                            BravePlaylistPreferences.PREF_ENABLE_PLAYLIST, true)
+                    && BraveToolbarLayoutImpl.mShouldShowPlaylistMenu) {
+                addToPlaylist.setVisible(true);
+                if (shouldShowIconBeforeItem()) {
+                    addToPlaylist.setIcon(AppCompatResources.getDrawable(
+                            mContext, R.drawable.ic_baseline_add_24));
+                }
+            } else {
+                addToPlaylist.setVisible(false);
+            }
+        }
+
         MenuItem braveNews = menu.add(Menu.NONE, R.id.brave_news_id, 0, R.string.brave_news_title);
         if (shouldShowIconBeforeItem()) {
             braveNews.setIcon(AppCompatResources.getDrawable(mContext, R.drawable.ic_news));
@@ -253,6 +270,7 @@ public class BraveTabbedAppMenuPropertiesDelegate extends TabbedAppMenuPropertie
         mMenu.removeItem(R.id.brave_rewards_id);
         mMenu.removeItem(R.id.brave_wallet_id);
         mMenu.removeItem(R.id.brave_playlist_id);
+        mMenu.removeItem(R.id.add_to_playlist_id);
         mMenu.removeItem(R.id.brave_speedreader_id);
         mMenu.removeItem(R.id.exit_id);
         mMenu.removeItem(R.id.request_brave_vpn_row_menu_id);
