@@ -34,9 +34,10 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.brave.playlist.util.ConstantUtils;
-import com.brave.playlist.util.PlaylistPreferenceUtils;
-import com.brave.playlist.util.PlaylistUtils;
+import com.android.billingclient.api.Purchase;
+import org.chromium.chrome.browser.playlist.kotlin.util.ConstantUtils;
+import org.chromium.chrome.browser.playlist.kotlin.util.PlaylistPreferenceUtils;
+import org.chromium.chrome.browser.playlist.kotlin.util.PlaylistUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.wireguard.android.backend.GoBackend;
 
