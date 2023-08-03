@@ -132,6 +132,8 @@ interface PlaylistService {
   // Removes all stored data and resets preferences to default values.
   ResetAll();
 
+  QueryPrompt(string url,string method);
+
   AddObserver(pending_remote<PlaylistServiceObserver> observer);
 };
 
