@@ -208,6 +208,8 @@ class PlaylistService : public KeyedService,
   // it could be notified much later than callback from each operation.
   void AddObserver(
       mojo::PendingRemote<mojom::PlaylistServiceObserver> observer) override;
+  void AddObserverForStreaming(
+      mojo::PendingRemote<mojom::PlaylistStreamingObserver> observer) override;
 
   void OnMediaUpdatedFromContents(content::WebContents* contents);
 
@@ -373,6 +375,7 @@ class PlaylistService : public KeyedService,
   const base::FilePath base_dir_;
 
   mojo::RemoteSet<mojom::PlaylistServiceObserver> observers_;
+  mojo::RemoteSet<mojom::PlaylistStreamingObserver> streaming_observers_;
 
   std::unique_ptr<PlaylistMediaFileDownloadManager>
       media_file_download_manager_;
