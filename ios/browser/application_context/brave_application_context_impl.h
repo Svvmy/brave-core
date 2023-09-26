@@ -10,6 +10,7 @@
 #include <string>
 
 #include "brave/components/brave_component_updater/browser/brave_component.h"
+#include "brave/components/debounce/core/browser/debounce_component_installer.h"
 #include "brave/components/url_sanitizer/browser/url_sanitizer_component_installer.h"
 #include "ios/chrome/browser/application_context/model/application_context_impl.h"
 
@@ -29,6 +30,7 @@ class BraveApplicationContextImpl : public ApplicationContextImpl {
       const std::string& country);
 
   brave::URLSanitizerComponentInstaller* url_sanitizer_component_installer();
+  debounce::DebounceComponentInstaller* debounce_component_installer();
 
   // Disable copy constructor and assignment operator
   BraveApplicationContextImpl(const BraveApplicationContextImpl&) = delete;
@@ -52,6 +54,8 @@ class BraveApplicationContextImpl : public ApplicationContextImpl {
       local_data_files_service_;
   std::unique_ptr<brave::URLSanitizerComponentInstaller>
       url_sanitizer_component_installer_;
+  std::unique_ptr<debounce::DebounceComponentInstaller>
+      debounce_component_installer_;
 };
 
 #endif  // BRAVE_IOS_BROWSER_APPLICATION_CONTEXT_BRAVE_APPLICATION_CONTEXT_IMPL_H_

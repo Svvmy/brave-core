@@ -6,16 +6,15 @@
 use std::collections::HashSet;
 use std::str::Utf8Error;
 
-use adblock::Engine as InnerEngine;
 use adblock::lists::FilterSet;
 use adblock::resources::{MimeType, Resource, ResourceType};
 use adblock::url_parser::ResolvesDomain;
+use adblock::Engine as InnerEngine;
 use cxx::{let_cxx_string, CxxString, CxxVector};
 
 use crate::ffi::{
     resolve_domain_position, BlockerResult, BoxEngineResult, ContentBlockingRulesResult,
-    FilterListMetadata, RegexDebugInfo, RegexManagerDiscardPolicy, UnitResult,
-    VecStringResult,
+    FilterListMetadata, RegexDebugInfo, RegexManagerDiscardPolicy, UnitResult, VecStringResult,
 };
 use crate::result::InternalError;
 
@@ -164,15 +163,13 @@ impl Engine {
     ) -> String {
         // The following strings are also UTF-8.
         self.engine
-            .get_csp_directives(
-                    &adblock::request::Request::preparsed(
-                        url.to_str().unwrap(),
-                        hostname.to_str().unwrap(),
-                        source_hostname.to_str().unwrap(),
-                        request_type.to_str().unwrap(),
-                        third_party_request,
-                    ),
-                )
+            .get_csp_directives(&adblock::request::Request::preparsed(
+                url.to_str().unwrap(),
+                hostname.to_str().unwrap(),
+                source_hostname.to_str().unwrap(),
+                request_type.to_str().unwrap(),
+                third_party_request,
+            ))
             .unwrap_or_default()
     }
 

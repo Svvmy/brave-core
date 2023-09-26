@@ -12,8 +12,7 @@ use crate::ffi::{
 use adblock::blocker::BlockerResult as InnerBlockerResult;
 use adblock::lists::{ExpiresInterval, FilterListMetadata as InnerFilterListMetadata};
 use adblock::regex_manager::{
-    RegexDebugEntry as InnerRegexDebugEntry,
-    RegexDebugInfo as InnerRegexDebugInfo,
+    RegexDebugEntry as InnerRegexDebugEntry, RegexDebugInfo as InnerRegexDebugInfo,
     RegexManagerDiscardPolicy as InnerRegexManagerDiscardPolicy,
 };
 

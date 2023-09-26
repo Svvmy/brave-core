@@ -41,7 +41,7 @@ java_cpp_strings("java_pref_names_srcjar") {
     "//brave/components/brave_vpn/common/pref_names.cc",
     "//brave/components/constants/pref_names.cc",
     "//brave/components/de_amp/common/pref_names.cc",
-    "//brave/components/debounce/common/pref_names.cc",
+    "//brave/components/debounce/core/common/pref_names.cc",
     "//brave/components/decentralized_dns/core/pref_names.cc",
     "//brave/components/ipfs/pref_names.cc",
     "//brave/components/ntp_background_images/common/pref_names.cc",

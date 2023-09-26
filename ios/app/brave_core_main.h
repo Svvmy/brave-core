@@ -24,6 +24,7 @@
 @class BraveTabGeneratorAPI;
 @class WebImageDownloader;
 @class NTPBackgroundImagesService;
+@class DeAmpPrefs;
 @protocol IpfsAPI;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -91,6 +92,8 @@ OBJC_EXPORT
                          weekOfInstall:(NSString*)weekOfInstall;
 
 @property(readonly) BraveP3AUtils* p3aUtils;
+
+@property(readonly) DeAmpPrefs* deAmpPrefs;
 
 @property(readonly) NTPBackgroundImagesService* backgroundImagesService;
 
