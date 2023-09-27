@@ -578,6 +578,8 @@ void PlaylistService::MoveItem(const std::string& from_playlist_id,
 }
 
 void PlaylistService::UpdateItem(mojom::PlaylistItemPtr item) {
+  LOG(ERROR) << "onDownloadCompleted : "
+             << "item->id : " << item->id;
   UpdatePlaylistItemValue(item->id,
                           base::Value(ConvertPlaylistItemToValue(item)));
   NotifyPlaylistChanged(mojom::PlaylistEvent::kItemUpdated, item->id);
@@ -592,6 +594,23 @@ void PlaylistService::UpdateItemLastPlayedPosition(
 
   auto item = GetPlaylistItem(id);
   item->last_played_position = last_played_position;
+  UpdateItem(std::move(item));
+}
+
+void PlaylistService::UpdateItemMediaFilePath(
+    const std::string& id,
+    const std::string& media_file_path) {
+  if (!HasPlaylistItem(id)) {
+    return;
+  }
+
+  LOG(ERROR) << "UpdateItemMediaFilePath : "
+             << "item->id : " << id;
+  LOG(ERROR) << "UpdateItemMediaFilePath : "
+             << "media_file_path : " << media_file_path;
+
+  auto item = GetPlaylistItem(id);
+  item->media_path = GURL("file://" + media_file_path);
   UpdateItem(std::move(item));
 }
 
@@ -659,6 +678,10 @@ std::string PlaylistService::GetDefaultSaveTargetListID() {
 
 void PlaylistService::UpdatePlaylistItemValue(const std::string& id,
                                               base::Value value) {
+  LOG(ERROR) << "onDownloadCompleted : "
+             << "id : " << id;
+  LOG(ERROR) << "onDownloadCompleted : "
+             << "value : " << value;
   ScopedDictPrefUpdate playlist_items(prefs_, kPlaylistItemsPref);
   playlist_items->Set(id, std::move(value));
 }
