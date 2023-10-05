@@ -45,6 +45,7 @@ struct PlaylistItem {
 
   // cached path or original src url
   url.mojom.Url media_path;
+  url.mojom.Url hls_media_path;
   url.mojom.Url thumbnail_path;
 
   // When it's |cached|, |media_path| and |thumbnail_path| will be
@@ -109,7 +110,7 @@ interface PlaylistService {
   // actors that update the item.
   UpdateItem(PlaylistItem item);
   UpdateItemLastPlayedPosition(string id, int32 last_played_position);
-  UpdateItemMediaFilePath(string id, string media_file_path);
+  UpdateItemHlsMediaFilePath(string id, string media_file_path);
 
   // Try downloading media files again. Returns PlaylistItem after trying
   // recovery. If it succeeded, |cached| state of the return item would be true.

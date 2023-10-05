@@ -74,12 +74,6 @@ public class DownloadServiceImpl extends DownloadService.Impl implements Connect
     private Context mContext = ContextUtils.getApplicationContext();
     private PlaylistService mPlaylistService;
 
-    private MutableLiveData mutablePlaylistItemData = new MutableLiveData<PlaylistItem>();
-    private LiveData<PlaylistItem> playlistItemData = mutablePlaylistItemData;
-    private void setPlaylistItem(PlaylistItem playlistItem) {
-        mutablePlaylistItemData.setValue(playlistItem);
-    }
-
     class LocalBinder extends Binder {
         DownloadServiceImpl getService() {
             return DownloadServiceImpl.this;
@@ -97,27 +91,17 @@ public class DownloadServiceImpl extends DownloadService.Impl implements Connect
         super.onCreate();
         if (ChromeFeatureList.isEnabled(BraveFeatureList.BRAVE_PLAYLIST)) {
             initPlaylistService();
-            LiveDataUtil.observeOnce(playlistItemData, playlistItem -> {
-                if (mPlaylistService == null) {
-                    return;
-                }
-                Log.e(TAG, "playlistItemData.observe : ");
-                // mPlaylistService.UpdateItemMediaFilePath(playlistItem);
-            });
         }
     }
 
     private DownloadQueueModel getFirstPlaylistItemToDownload() {
         PlaylistRepository playlistRepository = new PlaylistRepository(mContext);
-        // PostTask.postTask(
-        //         TaskTraits.BEST_EFFORT_MAY_BLOCK, () -> {
         if (playlistRepository.getAllDownloadQueueModel() != null
                 && playlistRepository.getAllDownloadQueueModel().size() > 0) {
             return playlistRepository.getAllDownloadQueueModel().get(0);
         } else {
             return null;
         }
-        // });
     }
 
     private void deletePlaylistItemFromDownloadQueue(DownloadQueueModel downloadQueueModel) {
@@ -135,10 +119,7 @@ public class DownloadServiceImpl extends DownloadService.Impl implements Connect
             if (mPlaylistService != null && downloadQueueModel != null) {
                 String playlistItemId = downloadQueueModel.getPlaylistItemId();
                 mPlaylistService.getPlaylistItem(playlistItemId, playlistItem -> {
-                    String mediaPath = new File(PathUtils.getDataDirectory() + File.separator,
-                            "Default" + File.separator + "playlist" + File.separator
-                                    + playlistItem.id + File.separator + "media_file.mp4")
-                                               .getAbsolutePath();
+                    String mediaPath = DownloadUtils.getHlsMediaFilePath(playlistItem);
                     String hlsManifestFilePath =
                             new File(PathUtils.getDataDirectory() + File.separator,
                                     "Default" + File.separator + "playlist" + File.separator
@@ -156,16 +137,6 @@ public class DownloadServiceImpl extends DownloadService.Impl implements Connect
                                             getDownloadNotification("", false, 0, 0));
                                 }
 
-                                // @Override
-                                // public void onDownloadProgress(long totalBytes, long
-                                // downloadedSofar) {
-                                //     Log.e(TAG, "onDownloadProgress : totalBytes : "+ totalBytes +
-                                //     " downloadedSofar : "+downloadedSofar);
-                                //     updateDownloadNotification(
-                                //             "Progress", true, (int) totalBytes, (int)
-                                //             downloadedSofar);
-                                // }
-
                                 @Override
                                 public void onDownloadProgress(int total, int downloadedSofar) {
                                     Log.e(TAG,
@@ -179,19 +150,23 @@ public class DownloadServiceImpl extends DownloadService.Impl implements Connect
                                 public void onDownloadCompleted(String mediaPath) {
                                     Log.e(TAG, "onDownloadCompleted : " + mediaPath);
                                     new Handler(Looper.getMainLooper()).post(() -> {
-                                        // org.chromium.url.mojom.Url contentUrl =
-                                        //         new org.chromium.url.mojom.Url();
-                                        // contentUrl.url = mediaPath;
-                                        // playlistItem.mediaPath = contentUrl;
                                         Log.e(TAG, "playlistItem.mediaPath : ");
-                                        mPlaylistService.updateItemMediaFilePath(
+                                        mPlaylistService.updateItemHlsMediaFilePath(
                                                 playlistItem.id, mediaPath);
                                         deletePlaylistItemFromDownloadQueue(downloadQueueModel);
-                                        // setPlaylistItem(playlistItem);
                                     });
                                     getService().stopForeground(true);
                                     getService().stopSelf();
                                 }
+
+                                // @Override
+                                // public void onDownloadFileAssigned(String mediaPath) {
+                                //     Log.e(TAG, "onDownloadFileAssigned : " + mediaPath);
+                                //     new Handler(Looper.getMainLooper()).post(() -> {
+                                //         mPlaylistService.updateItemHlsMediaFilePath(
+                                //                 playlistItem.id, mediaPath);
+                                //     });
+                                // }
                             });
                 });
             }

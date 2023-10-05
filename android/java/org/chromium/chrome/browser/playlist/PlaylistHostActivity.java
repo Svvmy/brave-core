@@ -313,12 +313,14 @@ public class PlaylistHostActivity extends AsyncInitializationActivity
                                                                 playlistItem.name,
                                                                 playlistItem.pageSource.url,
                                                                 playlistItem.mediaPath.url,
+                                                                playlistItem.hlsMediaPath.url,
                                                                 playlistItem.mediaSource.url,
                                                                 playlistItem.thumbnailPath.url,
                                                                 playlistItem.author,
                                                                 playlistItem.duration,
                                                                 playlistItem.lastPlayedPosition,
-                                                                playlistItem.cached, false, 0);
+                                                                playlistItem.mediaFileBytes,
+                                                                playlistItem.cached, false);
                                                 // PlaylistDownloadUtils.startDownloadRequest(
                                                 //         PlaylistHostActivity.this,
                                                 //         playlistItemModel);
@@ -425,9 +427,10 @@ public class PlaylistHostActivity extends AsyncInitializationActivity
             for (PlaylistItem playlistItem : playlist.items) {
                 PlaylistItemModel playlistItemModel = new PlaylistItemModel(playlistItem.id,
                         playlist.id, playlistItem.name, playlistItem.pageSource.url,
-                        playlistItem.mediaPath.url, playlistItem.mediaSource.url,
-                        playlistItem.thumbnailPath.url, playlistItem.author, playlistItem.duration,
-                        playlistItem.lastPlayedPosition, playlistItem.cached, false, 0);
+                        playlistItem.mediaPath.url, playlistItem.hlsMediaPath.url,
+                        playlistItem.mediaSource.url, playlistItem.thumbnailPath.url,
+                        playlistItem.author, playlistItem.duration, playlistItem.lastPlayedPosition,
+                        playlistItem.mediaFileBytes, playlistItem.cached, false);
                 playlistItems.add(playlistItemModel);
             }
             PlaylistModel playlistModel =
@@ -450,9 +453,10 @@ public class PlaylistHostActivity extends AsyncInitializationActivity
                     PlaylistItemModel playlistItemModel =
                             new PlaylistItemModel(playlistItem.id, playlist.id, playlistItem.name,
                                     playlistItem.pageSource.url, playlistItem.mediaPath.url,
-                                    playlistItem.mediaSource.url, playlistItem.thumbnailPath.url,
-                                    playlistItem.author, playlistItem.duration,
-                                    playlistItem.lastPlayedPosition, playlistItem.cached, false, 0);
+                                    playlistItem.hlsMediaPath.url, playlistItem.mediaSource.url,
+                                    playlistItem.thumbnailPath.url, playlistItem.author,
+                                    playlistItem.duration, playlistItem.lastPlayedPosition,
+                                    playlistItem.mediaFileBytes, playlistItem.cached, false);
                     playlistItems.add(playlistItemModel);
                 }
                 PlaylistModel playlistModel =
@@ -543,9 +547,10 @@ public class PlaylistHostActivity extends AsyncInitializationActivity
         mPlaylistService.getPlaylistItem(playlistItemId, playlistItem -> {
             PlaylistItemModel playlistItemModel = new PlaylistItemModel(playlistItem.id,
                     ConstantUtils.DEFAULT_PLAYLIST, playlistItem.name, playlistItem.pageSource.url,
-                    playlistItem.mediaPath.url, playlistItem.mediaSource.url,
-                    playlistItem.thumbnailPath.url, playlistItem.author, playlistItem.duration,
-                    playlistItem.lastPlayedPosition, playlistItem.cached, false, 0);
+                    playlistItem.mediaPath.url, playlistItem.hlsMediaPath.url,
+                    playlistItem.mediaSource.url, playlistItem.thumbnailPath.url,
+                    playlistItem.author, playlistItem.duration, playlistItem.lastPlayedPosition,
+                    (long) playlistItem.mediaFileBytes, playlistItem.cached, false);
             mPlaylistViewModel.updatePlaylistItemEvent(
                     new PlaylistItemEventModel(localPlaylistItemEvent, playlistItemModel));
         });
