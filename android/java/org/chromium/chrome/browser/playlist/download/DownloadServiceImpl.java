@@ -95,68 +95,48 @@ public class DownloadServiceImpl extends DownloadService.Impl implements Connect
         }
     }
 
-    private DownloadQueueModel getFirstPlaylistItemToDownload() {
-        // DownloadQueueModel downloadQueueModel = null;
-        PlaylistRepository playlistRepository = new PlaylistRepository(mContext);
-        // Log.e("playlist", "getFirstPlaylistItemToDownload : 1");
-        // if (playlistRepository.getAllDownloadQueueModel() != null
-        //         && playlistRepository.getAllDownloadQueueModel().size() > 0) {
-        //     Log.e("playlist", "getFirstPlaylistItemToDownload : 2");
-        //     downloadQueueModel = playlistRepository.getAllDownloadQueueModel().get(0);
-        // }
-        // Log.e("playlist", "getFirstPlaylistItemToDownload : 3");
-        // // playlistRepository.closeRepository();
-        return playlistRepository.getFirstDownloadQueueModel();
-    }
-
-    private void deletePlaylistItemFromDownloadQueue(DownloadQueueModel downloadQueueModel) {
+    private void startDownloadFromQueue() {
         PostTask.postTask(TaskTraits.BEST_EFFORT_MAY_BLOCK, () -> {
             PlaylistRepository playlistRepository = new PlaylistRepository(mContext);
             if (playlistRepository != null) {
-                playlistRepository.deleteDownloadQueueModel(downloadQueueModel);
-            }
-            // playlistRepository.closeRepository();
-        });
-    }
+                DownloadQueueModel downloadQueueModel =
+                        playlistRepository.getFirstDownloadQueueModel();
+                if (downloadQueueModel != null && mPlaylistService != null) {
+                    getService().startForeground(BRAVE_PLAYLIST_DOWNLOAD_NOTIFICATION_ID,
+                            getDownloadNotification("", false, 0, 0));
+                    String playlistItemId = downloadQueueModel.getPlaylistItemId();
+                    mPlaylistService.getPlaylistItem(playlistItemId, playlistItem -> {
+                        DownloadUtils.downloadManifestFile(mContext, mPlaylistService, playlistItem,
+                                new DownloadUtils.HlsManifestDownloadDelegate() {
+                                    @Override
+                                    public void onHlsManifestDownloadCompleted(
+                                            Queue<Segment> segmentsQueue) {
+                                        int total = segmentsQueue.size();
+                                        String hlsMediaFilePath =
+                                                DownloadUtils.getHlsMediaFilePath(playlistItem);
+                                        DownloadUtils.deleteFileIfExist(hlsMediaFilePath);
+                                        PostTask.postTask(TaskTraits.BEST_EFFORT_MAY_BLOCK, () -> {
+                                            playlistRepository.updateDownloadQueueModel(
+                                                    new DownloadQueueModel(playlistItem.id,
+                                                            DownloadStatus.DOWNLOADING.name()));
+                                        });
+                                        DownloadUtils.downalodHLSFile(mContext, mPlaylistService,
+                                                playlistItem, segmentsQueue,
+                                                new DownloadUtils.HlsFileDownloadDelegate() {
+                                                    @Override
+                                                    public void onDownloadProgress(
+                                                            int downloadedSofar) {
+                                                        updateDownloadNotification(
+                                                                playlistItem.name, true, total,
+                                                                downloadedSofar);
+                                                    }
 
-    private void startDownloadFromQueue() {
-        PostTask.postTask(TaskTraits.BEST_EFFORT_MAY_BLOCK, () -> {
-            DownloadQueueModel downloadQueueModel = getFirstPlaylistItemToDownload();
-            if (mPlaylistService != null && downloadQueueModel != null) {
-                getService().startForeground(BRAVE_PLAYLIST_DOWNLOAD_NOTIFICATION_ID,
-                        getDownloadNotification("", false, 0, 0));
-                String playlistItemId = downloadQueueModel.getPlaylistItemId();
-                mPlaylistService.getPlaylistItem(playlistItemId, playlistItem -> {
-                    DownloadUtils.downloadManifestFile(mContext, mPlaylistService, playlistItem,
-                            new DownloadUtils.HlsManifestDownloadDelegate() {
-                                @Override
-                                public void onHlsManifestDownloadCompleted(
-                                        Queue<Segment> segmentsQueue) {
-                                    int total = segmentsQueue.size();
-                                    String hlsMediaFilePath =
-                                            DownloadUtils.getHlsMediaFilePath(playlistItem);
-                                    DownloadUtils.deleteFileIfExist(hlsMediaFilePath);
-                                    DownloadUtils.downalodHLSFile(mContext, mPlaylistService,
-                                            playlistItem, segmentsQueue,
-                                            new DownloadUtils.HlsFileDownloadDelegate() {
-                                                @Override
-                                                public void onDownloadProgress(
-                                                        int downloadedSofar) {
-                                                    updateDownloadNotification(playlistItem.name,
-                                                            true, total, downloadedSofar);
-                                                }
-
-                                                @Override
-                                                public void onDownloadCompleted(String mediaPath) {
-                                                    // new Handler(Looper.getMainLooper()).post(()
-                                                    // -> {
-                                                    PostTask.postTask(
-                                                            TaskTraits.BEST_EFFORT_MAY_BLOCK,
-                                                            () -> {
-                                                                PlaylistRepository playlistRepository =
-                                                                        new PlaylistRepository(
-                                                                                mContext);
-                                                                if (playlistRepository != null) {
+                                                    @Override
+                                                    public void onDownloadCompleted(
+                                                            String mediaPath) {
+                                                        PostTask.postTask(
+                                                                TaskTraits.BEST_EFFORT_MAY_BLOCK,
+                                                                () -> {
                                                                     mPlaylistService
                                                                             .updateItemHlsMediaFilePath(
                                                                                     playlistItem.id,
@@ -165,36 +145,24 @@ public class DownloadServiceImpl extends DownloadService.Impl implements Connect
                                                                             new DownloadQueueModel(
                                                                                     playlistItem.id,
                                                                                     DownloadStatus
-                                                                                            .DOWNLOADING
+                                                                                            .DOWNLOADED
                                                                                             .name()));
-                                                                    getService().stopForeground(
-                                                                            true);
-                                                                    getService().stopSelf();
-                                                                }
-                                                                // playlistRepository.closeRepository();
-                                                            });
-                                                    // mPlaylistService.updateItemHlsMediaFilePath(
-                                                    //         playlistItem.id, mediaPath);
-                                                    // deletePlaylistItemFromDownloadQueue(
-                                                    //         downloadQueueModel);
-                                                    // });
-                                                    // Log.e("playlist", "startDownloadFromQueue :
-                                                    // 1"); DownloadQueueModel downloadQueue =
-                                                    // getFirstPlaylistItemToDownload();
-                                                    // Log.e("playlist", "startDownloadFromQueue :
-                                                    // 2"+ downloadQueue); if (downloadQueue !=
-                                                    // null) {
-                                                    //     Log.e("playlist", "startDownloadFromQueue
-                                                    //     : 3"); startDownloadFromQueue();
-                                                    // } else {
-                                                    // getService().stopForeground(true);
-                                                    // getService().stopSelf();
-                                                    // }
-                                                }
-                                            });
-                                }
-                            });
-                });
+                                                                    if (playlistRepository
+                                                                                    .getFirstDownloadQueueModel()
+                                                                            != null) {
+                                                                        startDownloadFromQueue();
+                                                                    } else {
+                                                                        getService().stopForeground(
+                                                                                true);
+                                                                        getService().stopSelf();
+                                                                    }
+                                                                });
+                                                    }
+                                                });
+                                    }
+                                });
+                    });
+                }
             }
         });
     }
@@ -260,13 +228,5 @@ public class DownloadServiceImpl extends DownloadService.Impl implements Connect
         NotificationManager mNotificationManager =
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(BRAVE_PLAYLIST_DOWNLOAD_NOTIFICATION_ID, notification);
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.e("playlist", "DownloadServiceImpl onDestroy");
-        Intent intent = new Intent(mContext, DownloadService.class);
-        mContext.startService(intent);
-        super.onDestroy();
     }
 }
