@@ -890,7 +890,7 @@ IN_PROC_BROWSER_TEST_F(IpfsTabHelperBrowserTest, IPFSFallbackInfobar) {
   //  Disable IPFS Companion
   prefs->SetBoolean(kIPFSCompanionEnabled, false);
   {
-    ui_test_utils::NavigateToURL(browser(), test_url);
+    ASSERT_TRUE(ui_test_utils::NavigateToURL(browser(), test_url));
     WaitForLoadStopWithoutSuccessCheck(active_contents());
     // Get last shown infobar
     auto* infobar = find_infobar(
@@ -902,7 +902,7 @@ IN_PROC_BROWSER_TEST_F(IpfsTabHelperBrowserTest, IPFSFallbackInfobar) {
   SetHttpStatusCode(net::HTTP_INTERNAL_SERVER_ERROR);
 
   {
-    ui_test_utils::NavigateToURL(browser(), test_url);
+    ASSERT_TRUE(ui_test_utils::NavigateToURL(browser(), test_url));
     WaitForLoadStopWithoutSuccessCheck(active_contents());
     // Get last shown infobar
     auto* infobar = find_infobar(
@@ -916,7 +916,7 @@ IN_PROC_BROWSER_TEST_F(IpfsTabHelperBrowserTest, IPFSFallbackInfobar) {
   }
 
   {
-    ui_test_utils::NavigateToURL(browser(), test_url);
+    ASSERT_TRUE(ui_test_utils::NavigateToURL(browser(), test_url));
     WaitForLoadStopWithoutSuccessCheck(active_contents());
     auto ipfs_address = active_contents()->GetVisibleURL();
     // Get last shown infobar
@@ -931,7 +931,7 @@ IN_PROC_BROWSER_TEST_F(IpfsTabHelperBrowserTest, IPFSFallbackInfobar) {
   }
 
   {
-    ui_test_utils::NavigateToURL(browser(), test_non_ipfs_url);
+    ASSERT_TRUE(ui_test_utils::NavigateToURL(browser(), test_non_ipfs_url));
     WaitForLoadStopWithoutSuccessCheck(active_contents());
     // Get last shown infobar
     auto* infobar = find_infobar(
@@ -944,7 +944,7 @@ IN_PROC_BROWSER_TEST_F(IpfsTabHelperBrowserTest, IPFSFallbackInfobar) {
   //  Enable the IPFS companion
   prefs->SetBoolean(kIPFSCompanionEnabled, true);
   {
-    ui_test_utils::NavigateToURL(browser(), test_url);
+    ASSERT_TRUE(ui_test_utils::NavigateToURL(browser(), test_url));
     WaitForLoadStopWithoutSuccessCheck(active_contents());
     // Get last shown infobar
     auto* infobar = find_infobar(
