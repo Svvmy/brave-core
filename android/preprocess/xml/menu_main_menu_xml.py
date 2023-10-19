@@ -36,7 +36,7 @@ def _ProcessXML(root):
 
     parent = root.find('group/[@android:id="@+id/PAGE_MENU"]', namespaces=ns)
     playlist_child = parent.find('item/[@android:id="@+id/brave_wallet_id"]',
-                        namespaces=ns)
+                                 namespaces=ns)
     idx = list(parent).index(playlist_child)
     parent.insert(idx + 1, playlist_node)
 
@@ -47,8 +47,8 @@ def _ProcessXML(root):
     add_to_playlist_node = ET.fromstring(add_playlist_node_str,
                                          parser=ET.XMLParser(encoding="utf-8"))
     parent = root.find('group/[@android:id="@+id/PAGE_MENU"]', namespaces=ns)
-    add_to_playlist_child = parent.find('item/[@android:id="@+id/brave_playlist_id"]',
-                        namespaces=ns)
+    add_to_playlist_child = parent.find(
+        'item/[@android:id="@+id/brave_playlist_id"]', namespaces=ns)
     idx = list(parent).index(add_to_playlist_child)
     parent.insert(idx + 1, add_to_playlist_node)
 
@@ -61,7 +61,7 @@ def _ProcessXML(root):
 
     parent = root.find('group/[@android:id="@+id/PAGE_MENU"]', namespaces=ns)
     leo_child = parent.find('item/[@android:id="@+id/add_to_playlist_id"]',
-                        namespaces=ns)
+                            namespaces=ns)
     idx = list(parent).index(leo_child)
     parent.insert(idx + 1, brave_leo_node)
 

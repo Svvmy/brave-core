@@ -24,14 +24,15 @@ import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.brave.playlist.PlaylistDownloadUtils;
 import com.brave.playlist.enums.DownloadStatus;
 import com.brave.playlist.local_database.PlaylistRepository;
+import com.brave.playlist.model.DownloadProgressModel;
 import com.brave.playlist.model.DownloadQueueModel;
 import com.brave.playlist.model.PlaylistItemModel;
 import com.brave.playlist.util.ConstantUtils;
 import com.brave.playlist.util.HLSParsingUtil;
 import com.brave.playlist.util.PlaylistUtils;
-import com.brave.playlist.model.DownloadProgressModel;
 import com.google.android.exoplayer2.source.hls.playlist.HlsMediaPlaylist.Segment;
 
 import org.chromium.base.BraveFeatureList;
@@ -45,7 +46,6 @@ import org.chromium.chrome.R;
 import org.chromium.chrome.browser.app.BraveActivity;
 import org.chromium.chrome.browser.flags.ChromeFeatureList;
 import org.chromium.chrome.browser.playlist.PlaylistServiceFactoryAndroid;
-import org.chromium.chrome.browser.playlist.PlaylistStreamingObserverImpl.PlaylistStreamingObserverImplDelegate;
 import org.chromium.chrome.browser.playlist.download.CancelDownloadBroadcastReceiver;
 import org.chromium.chrome.browser.playlist.settings.BravePlaylistPreferences;
 import org.chromium.chrome.browser.preferences.SharedPreferencesManager;
@@ -54,8 +54,6 @@ import org.chromium.mojo.bindings.ConnectionErrorHandler;
 import org.chromium.mojo.system.MojoException;
 import org.chromium.playlist.mojom.PlaylistItem;
 import org.chromium.playlist.mojom.PlaylistService;
-import com.brave.playlist.PlaylistDownloadUtils;
-import org.chromium.playlist.mojom.PlaylistStreamingObserver;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -117,7 +115,8 @@ public class DownloadServiceImpl extends DownloadService.Impl implements Connect
                                         String hlsMediaFilePath =
                                                 DownloadUtils.getHlsMediaFilePath(playlistItem);
                                         DownloadUtils.deleteFileIfExist(hlsMediaFilePath);
-                                        // PostTask.postTask(TaskTraits.BEST_EFFORT_MAY_BLOCK, () -> {
+                                        // PostTask.postTask(TaskTraits.BEST_EFFORT_MAY_BLOCK, () ->
+                                        // {
                                         //     playlistRepository.updateDownloadQueueModel(
                                         //             new DownloadQueueModel(playlistItem.id,
                                         //                     DownloadStatus.DOWNLOADING.name()));
@@ -131,7 +130,15 @@ public class DownloadServiceImpl extends DownloadService.Impl implements Connect
                                                         updateDownloadNotification(
                                                                 playlistItem.name, true, total,
                                                                 downloadedSofar);
-                                                        PlaylistDownloadUtils.updateDownloadProgress(new DownloadProgressModel(playlistItem.id, (long)total, (long)downloadedSofar, ""+(downloadedSofar*100)/total));
+                                                        PlaylistDownloadUtils.updateDownloadProgress(
+                                                                new DownloadProgressModel(
+                                                                        playlistItem.id,
+                                                                        (long) total,
+                                                                        (long) downloadedSofar,
+                                                                        ""
+                                                                                + (downloadedSofar
+                                                                                          * 100)
+                                                                                        / total));
                                                     }
 
                                                     @Override

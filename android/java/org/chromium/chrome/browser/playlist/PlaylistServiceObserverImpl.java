@@ -5,6 +5,7 @@
 
 package org.chromium.chrome.browser.playlist;
 
+import org.chromium.base.Log;
 import org.chromium.mojo.system.MojoException;
 import org.chromium.playlist.mojom.Playlist;
 import org.chromium.playlist.mojom.PlaylistItem;
@@ -27,6 +28,8 @@ public class PlaylistServiceObserverImpl implements PlaylistServiceObserver {
 
     @Override
     public void onEvent(int event, String playlistId) {
+        Log.e("PlaylistObserve",
+                "PlaylistServiceObserverImpl : playlist id : " + playlistId + " Event : " + event);
         if (mDelegate == null) return;
 
         mDelegate.onEvent(event, playlistId);
@@ -35,6 +38,8 @@ public class PlaylistServiceObserverImpl implements PlaylistServiceObserver {
     @Override
     public void onMediaFileDownloadProgressed(String id, long totalBytes, long receivedBytes,
             byte percentComplete, String timeRemaining) {
+        Log.e("PlaylistObserve",
+                "PlaylistServiceObserverImpl : percentComplete " + percentComplete);
         if (mDelegate == null) return;
 
         mDelegate.onMediaFileDownloadProgressed(

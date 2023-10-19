@@ -5,6 +5,7 @@
 
 package org.chromium.chrome.browser.playlist;
 
+import org.chromium.base.Log;
 import org.chromium.mojo.system.MojoException;
 import org.chromium.playlist.mojom.PlaylistStreamingObserver;
 
@@ -29,6 +30,7 @@ public class PlaylistStreamingObserverImpl implements PlaylistStreamingObserver 
 
     @Override
     public void onDataReceived(byte[] dataReceived) {
+        Log.e("PlaylistObserve", "PlaylistStreamingObserverImpl : " + dataReceived.length);
         if (mDelegate == null) return;
         mDelegate.onDataReceived(dataReceived);
     }
