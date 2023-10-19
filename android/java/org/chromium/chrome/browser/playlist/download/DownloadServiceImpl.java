@@ -31,6 +31,7 @@ import com.brave.playlist.model.PlaylistItemModel;
 import com.brave.playlist.util.ConstantUtils;
 import com.brave.playlist.util.HLSParsingUtil;
 import com.brave.playlist.util.PlaylistUtils;
+import com.brave.playlist.model.DownloadProgressModel;
 import com.google.android.exoplayer2.source.hls.playlist.HlsMediaPlaylist.Segment;
 
 import org.chromium.base.BraveFeatureList;
@@ -53,6 +54,7 @@ import org.chromium.mojo.bindings.ConnectionErrorHandler;
 import org.chromium.mojo.system.MojoException;
 import org.chromium.playlist.mojom.PlaylistItem;
 import org.chromium.playlist.mojom.PlaylistService;
+import com.brave.playlist.PlaylistDownloadUtils;
 import org.chromium.playlist.mojom.PlaylistStreamingObserver;
 
 import java.io.ByteArrayInputStream;
@@ -115,11 +117,11 @@ public class DownloadServiceImpl extends DownloadService.Impl implements Connect
                                         String hlsMediaFilePath =
                                                 DownloadUtils.getHlsMediaFilePath(playlistItem);
                                         DownloadUtils.deleteFileIfExist(hlsMediaFilePath);
-                                        PostTask.postTask(TaskTraits.BEST_EFFORT_MAY_BLOCK, () -> {
-                                            playlistRepository.updateDownloadQueueModel(
-                                                    new DownloadQueueModel(playlistItem.id,
-                                                            DownloadStatus.DOWNLOADING.name()));
-                                        });
+                                        // PostTask.postTask(TaskTraits.BEST_EFFORT_MAY_BLOCK, () -> {
+                                        //     playlistRepository.updateDownloadQueueModel(
+                                        //             new DownloadQueueModel(playlistItem.id,
+                                        //                     DownloadStatus.DOWNLOADING.name()));
+                                        // });
                                         DownloadUtils.downalodHLSFile(mContext, mPlaylistService,
                                                 playlistItem, segmentsQueue,
                                                 new DownloadUtils.HlsFileDownloadDelegate() {
@@ -129,6 +131,7 @@ public class DownloadServiceImpl extends DownloadService.Impl implements Connect
                                                         updateDownloadNotification(
                                                                 playlistItem.name, true, total,
                                                                 downloadedSofar);
+                                                        PlaylistDownloadUtils.updateDownloadProgress(new DownloadProgressModel(playlistItem.id, (long)total, (long)downloadedSofar, ""+(downloadedSofar*100)/total));
                                                     }
 
                                                     @Override

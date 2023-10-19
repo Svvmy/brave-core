@@ -137,14 +137,12 @@ public class PlaylistHostActivity extends AsyncInitializationActivity
         mPlaylistViewModel =
                 new ViewModelProvider(PlaylistHostActivity.this).get(PlaylistViewModel.class);
 
-        mPlaylistViewModel.getStartDownloadingFromQueue().observe(
-                PlaylistHostActivity.this, shouldStartDownload -> {
-                    if (shouldStartDownload) {
-                        Intent intent =
-                                new Intent(PlaylistHostActivity.this, DownloadService.class);
-                        startService(intent);
-                    }
-                });
+        // mPlaylistViewModel.getStartDownloadingFromQueue().observe(
+        //         PlaylistHostActivity.this, shouldStartDownload -> {
+        //             if (shouldStartDownload && !ForegroundServiceUtil.isServiceRunningInForeground(PlaylistHostActivity.this, DownloadService.class)) {
+        //                 startService(new Intent(PlaylistHostActivity.this, DownloadService.class));
+        //             }
+        //         });
 
         mPlaylistViewModel.getCreatePlaylistOption().observe(
                 PlaylistHostActivity.this, createPlaylistModel -> {
@@ -482,7 +480,7 @@ public class PlaylistHostActivity extends AsyncInitializationActivity
     }
 
     @Override
-    public void onOptionClicked(PlaylistOptionsModel playlistOptionsModel) {
+    public void onPlaylistOptionClicked(PlaylistOptionsModel playlistOptionsModel) {
         if (PlaylistOptionsEnum.DELETE_PLAYLIST == playlistOptionsModel.getOptionType()
                 && mPlaylistService != null && playlistOptionsModel.getPlaylistModel() != null) {
             mPlaylistService.removePlaylist(playlistOptionsModel.getPlaylistModel().getId());
@@ -507,60 +505,69 @@ public class PlaylistHostActivity extends AsyncInitializationActivity
         }
         if (eventType == PlaylistEvent.LIST_CREATED || eventType == PlaylistEvent.LIST_REMOVED) {
             loadAllPlaylists();
-        } else if (eventType == PlaylistEvent.ITEM_MOVED) {
-            loadPlaylist(id);
-        } else {
-            updatePlaylistItemEvent(eventType, id);
-        }
+        } else if (eventType == PlaylistEvent.ITEM_CACHED || eventType == PlaylistEvent.ITEM_DELETED || eventType == PlaylistEvent.ITEM_UPDATED) {
+            // updatePlaylistItemEvent(eventType, id);
+
+            // Log.e("eventType", "onEvent : "+ eventType.name());
+            // loadPlaylist(id);
+            mPlaylistViewModel.updatePlaylistItemEvent(new PlaylistItemEventModel(eventType, id));
+        } 
+        // else {
+        //     updatePlaylistItemEvent(eventType, id);
+        // }
     }
 
-    private void updatePlaylistItemEvent(int eventType, String playlistItemId) {
-        PlaylistItemEventEnum playlistItemEvent = PlaylistItemEventEnum.NONE;
-        switch (eventType) {
-            case PlaylistEvent.ITEM_ADDED:
-                playlistItemEvent = PlaylistItemEventEnum.ITEM_ADDED;
-                break;
-            case PlaylistEvent.ITEM_THUMBNAIL_READY:
-                playlistItemEvent = PlaylistItemEventEnum.ITEM_THUMBNAIL_READY;
-                break;
-            case PlaylistEvent.ITEM_THUMBNAIL_FAILED:
-                playlistItemEvent = PlaylistItemEventEnum.ITEM_THUMBNAIL_FAILED;
-                break;
-            case PlaylistEvent.ITEM_CACHED:
-                playlistItemEvent = PlaylistItemEventEnum.ITEM_CACHED;
-                break;
-            case PlaylistEvent.ITEM_DELETED:
-                playlistItemEvent = PlaylistItemEventEnum.ITEM_DELETED;
-                break;
-            case PlaylistEvent.ITEM_UPDATED:
-                playlistItemEvent = PlaylistItemEventEnum.ITEM_UPDATED;
-                break;
-            case PlaylistEvent.ITEM_ABORTED:
-                playlistItemEvent = PlaylistItemEventEnum.ITEM_ABORTED;
-                break;
-            case PlaylistEvent.ITEM_LOCAL_DATA_REMOVED:
-                playlistItemEvent = PlaylistItemEventEnum.ITEM_LOCAL_DATA_REMOVED;
-                break;
-        }
-        final PlaylistItemEventEnum localPlaylistItemEvent = playlistItemEvent;
-        mPlaylistService.getPlaylistItem(playlistItemId, playlistItem -> {
-            PlaylistItemModel playlistItemModel = new PlaylistItemModel(playlistItem.id,
-                    ConstantUtils.DEFAULT_PLAYLIST, playlistItem.name, playlistItem.pageSource.url,
-                    playlistItem.mediaPath.url, playlistItem.hlsMediaPath.url,
-                    playlistItem.mediaSource.url, playlistItem.thumbnailPath.url,
-                    playlistItem.author, playlistItem.duration, playlistItem.lastPlayedPosition,
-                    (long) playlistItem.mediaFileBytes, playlistItem.cached, false);
-            mPlaylistViewModel.updatePlaylistItemEvent(
-                    new PlaylistItemEventModel(localPlaylistItemEvent, playlistItemModel));
-        });
-    }
+    // private void updatePlaylistItemEvent(int eventType, String playlistItemId) {
+    //     PlaylistItemEventEnum playlistItemEvent = PlaylistItemEventEnum.NONE;
+    //     switch (eventType) {
+    //         case PlaylistEvent.ITEM_ADDED:
+    //             playlistItemEvent = PlaylistItemEventEnum.ITEM_ADDED;
+    //             break;
+    //         case PlaylistEvent.ITEM_THUMBNAIL_READY:
+    //             playlistItemEvent = PlaylistItemEventEnum.ITEM_THUMBNAIL_READY;
+    //             break;
+    //         case PlaylistEvent.ITEM_THUMBNAIL_FAILED:
+    //             playlistItemEvent = PlaylistItemEventEnum.ITEM_THUMBNAIL_FAILED;
+    //             break;
+    //         case PlaylistEvent.ITEM_CACHED:
+    //             playlistItemEvent = PlaylistItemEventEnum.ITEM_CACHED;
+    //             break;
+    //         case PlaylistEvent.ITEM_DELETED:
+    //             playlistItemEvent = PlaylistItemEventEnum.ITEM_DELETED;
+    //             break;
+    //         case PlaylistEvent.ITEM_UPDATED:
+    //             playlistItemEvent = PlaylistItemEventEnum.ITEM_UPDATED;
+    //             break;
+    //         case PlaylistEvent.ITEM_ABORTED:
+    //             playlistItemEvent = PlaylistItemEventEnum.ITEM_ABORTED;
+    //             break;
+    //         case PlaylistEvent.ITEM_LOCAL_DATA_REMOVED:
+    //             playlistItemEvent = PlaylistItemEventEnum.ITEM_LOCAL_DATA_REMOVED;
+    //             break;
+    //     }
+    //     // final PlaylistItemEventEnum localPlaylistItemEvent = playlistItemEvent;
+    //     // mPlaylistService.getPlaylistItem(playlistItemId, playlistItem -> {
+    //     //     PlaylistItemModel playlistItemModel = new PlaylistItemModel(playlistItem.id,
+    //     //             ConstantUtils.DEFAULT_PLAYLIST, playlistItem.name, playlistItem.pageSource.url,
+    //     //             playlistItem.mediaPath.url, playlistItem.hlsMediaPath.url,
+    //     //             playlistItem.mediaSource.url, playlistItem.thumbnailPath.url,
+    //     //             playlistItem.author, playlistItem.duration, playlistItem.lastPlayedPosition,
+    //     //             (long) playlistItem.mediaFileBytes, playlistItem.cached, false);
+    //     //     mPlaylistViewModel.updatePlaylistItemEvent(
+    //     //             new PlaylistItemEventModel(localPlaylistItemEvent, playlistItemId));
+    //     // });
+    //     Log.e("eventType", "onEvent : "+ eventType+"");
+    //     Log.e("eventType", "PlaylistItemEventEnum : "+ playlistItemEvent.name());
+    //     mPlaylistViewModel.updatePlaylistItemEvent(
+    //                 new PlaylistItemEventModel(playlistItemEvent, playlistItemId));
+    // }
 
     @Override
     public void onMediaFileDownloadProgressed(String id, long totalBytes, long receivedBytes,
             byte percentComplete, String timeRemaining) {
         if (mPlaylistViewModel != null) {
             mPlaylistViewModel.updateDownloadProgress(new DownloadProgressModel(
-                    id, totalBytes, receivedBytes, percentComplete, timeRemaining));
+                    id, totalBytes, receivedBytes, ""+percentComplete));
         }
     }
 
