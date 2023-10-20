@@ -53,6 +53,7 @@ constexpr inline auto kCollectedTypicalHistograms =
     "Brave.Playlist.UsageDaysInWeek",
     "Brave.Rewards.AdTypesEnabled",
     "Brave.Rewards.AutoContributionsState.3",
+    "Brave.Rewards.CustomNotificationPosition",
     "Brave.Rewards.EnabledSource",
     "Brave.Rewards.InlineTipTrigger",
     "Brave.Rewards.TipsState.2",
