@@ -59,17 +59,12 @@ gfx::Rect GetDefaultDisplayScreenWorkArea(gfx::NativeView browser_native_view) {
              : GetPrimaryDisplayScreenWorkArea();
 }
 
-void AdjustBoundsAndSnapToFitWorkAreaForNativeView(views::Widget* widget,
+void AdjustBoundsAndSnapToFitWorkAreaForNativeView(gfx::NativeView native_view,
                                                    gfx::Rect* bounds) {
-  CHECK(widget);
   CHECK(bounds);
 
-  gfx::NativeView native_view = widget->GetNativeView();
   gfx::Rect work_area;
   if (kUseSameZOrderAsBrowserWindow.Get()) {
-    if (widget->parent()) {
-      native_view = widget->parent()->GetNativeView();
-    }
     work_area = GetNearestDisplayScreenWorkArea(native_view);
   } else if (kShouldSupportMultipleDisplays.Get()) {
     work_area = GetDisplayScreenWorkArea(bounds, native_view);
@@ -79,6 +74,21 @@ void AdjustBoundsAndSnapToFitWorkAreaForNativeView(views::Widget* widget,
 
   AdjustBoundsToFitWorkArea(work_area, bounds);
   SnapBoundsToEdgeOfWorkArea(work_area, bounds);
+}
+
+void AdjustBoundsAndSnapToFitWorkAreaForNativeView(views::Widget* widget,
+                                                   gfx::Rect* bounds) {
+  CHECK(widget);
+  CHECK(bounds);
+
+  gfx::NativeView native_view = widget->GetNativeView();
+  if (kUseSameZOrderAsBrowserWindow.Get()) {
+    if (widget->parent()) {
+      native_view = widget->parent()->GetNativeView();
+    }
+  }
+
+  return AdjustBoundsAndSnapToFitWorkAreaForNativeView(native_view, bounds);
 }
 
 void SnapBoundsToEdgeOfWorkArea(const gfx::Rect& work_area, gfx::Rect* bounds) {

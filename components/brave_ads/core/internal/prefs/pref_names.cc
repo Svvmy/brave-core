@@ -26,6 +26,8 @@ const char kNotificationAdLastNormalizedDisplayCoordinateY[] =
     "brave.brave_ads.ad_notification.last_normalized_display_coordinate_y";
 const char kNotificationAdDidFallbackToCustom[] =
     "brave.brave_ads.ad_notification.did_fallback_to_custom";
+const char kNotificationAdDefaultDisplayCoordinatePrefMigrated[] =
+    "brave.brave_ads.ad_notification.default_display_coordinate_pref_migrated";
 
 // Stores the supported country codes current schema version number
 const char kSupportedCountryCodesLastSchemaVersion[] =

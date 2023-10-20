@@ -19,6 +19,7 @@ extern const char kShouldShowOnboardingNotification[];
 extern const char kNotificationAdLastNormalizedDisplayCoordinateX[];
 extern const char kNotificationAdLastNormalizedDisplayCoordinateY[];
 extern const char kNotificationAdDidFallbackToCustom[];
+extern const char kNotificationAdDefaultDisplayCoordinatePrefMigrated[];
 
 // Migration prefs
 extern const char kSupportedCountryCodesLastSchemaVersion[];

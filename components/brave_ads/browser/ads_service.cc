@@ -37,6 +37,8 @@ void AdsService::RegisterProfilePrefs(
       prefs::kNotificationAdLastNormalizedDisplayCoordinateY, 0.0);
   registry->RegisterBooleanPref(prefs::kNotificationAdDidFallbackToCustom,
                                 false);
+  registry->RegisterBooleanPref(
+      prefs::kNotificationAdDefaultDisplayCoordinatePrefMigrated, false);
 
   registry->RegisterStringPref(prefs::kDiagnosticId, "");
 

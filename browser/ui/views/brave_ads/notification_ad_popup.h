@@ -114,8 +114,12 @@ class NotificationAdPopup : public views::WidgetDelegateView,
 
   bool WasNotificationAdPopupShownBefore() const;
   void SetInitialWidgetOrigin(gfx::NativeView browser_native_view);
-  gfx::Point GetWidgetOriginForSize(const gfx::Size& size,
-                                    gfx::NativeView browser_native_view);
+  void MaybeMigrateWidgetOriginPositionForSize(
+      const gfx::Size& size,
+      gfx::NativeView browser_native_view);
+  gfx::Rect GetWidgetBoundsForSize(const gfx::Size& size,
+                                   gfx::NativeView browser_native_view,
+                                   bool use_default_position);
   void SaveWidgetOrigin(const gfx::Point& origin,
                         gfx::NativeView native_view) const;
 
