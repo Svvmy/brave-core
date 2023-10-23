@@ -119,7 +119,7 @@ MULTIPROCESS_TEST_MAIN(SleepyCrashChildProcess) {
   ::signal(SIGSEGV, SIG_DFL);
 #endif
   // Make this process have a segmentation fault.
-  volatile int* oops = nullptr;
+  volatile int* volatile oops = nullptr;
   *oops = 0xDEAD;
   return 1;
 }
