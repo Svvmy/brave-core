@@ -1656,19 +1656,8 @@ public abstract class BraveToolbarLayoutImpl extends ToolbarLayout
     }
 
     @Override
-    public void onEvent(int eventType, String id) {
-        if (eventType == PlaylistEvent.ITEM_ADDED) {
-            showAddedToPlaylistSnackBar();
-            // if (mPlaylistService != null) {
-            //     mPlaylistService.getPlaylistItem(id, playlistItem -> {
-            //         DownloadUtils.insertDonwloadQueue(
-            //                 new DownloadQueueModel(playlistItem.id,
-            //                 DownloadStatus.PENDING.name()));
-            //         // PlaylistDownloadUtils.startDownloadRequest(getContext(),
-            //         playlistItemModel);
-            //     });
-            // }
-        }
+    public void onItemAddedToList(String playlistId, String itemId) {
+        showAddedToPlaylistSnackBar();
     }
 
     @Override

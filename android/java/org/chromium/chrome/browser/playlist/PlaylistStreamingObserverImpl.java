@@ -30,7 +30,6 @@ public class PlaylistStreamingObserverImpl implements PlaylistStreamingObserver 
 
     @Override
     public void onDataReceived(byte[] dataReceived) {
-        Log.e("PlaylistObserve", "PlaylistStreamingObserverImpl : " + dataReceived.length);
         if (mDelegate == null) return;
         mDelegate.onDataReceived(dataReceived);
     }

@@ -53,6 +53,7 @@ public class DownloadUtils {
     }
 
     private static int downloadedSofar = 0;
+    private static PlaylistStreamingObserverImpl playlistStreamingObserverImpl = null;
 
     public static void downloadManifestFile(Context context, PlaylistService playlistService,
             PlaylistItem playlistItem,
@@ -61,7 +62,6 @@ public class DownloadUtils {
         String hlsManifestFilePath = getHlsManifestFilePath(playlistItem);
         final String manifestUrl = getHlsResolutionManifestUrl(context, playlistItem);
         if (playlistService != null) {
-            Log.e("playlist", "manifestUrl : " + manifestUrl);
             playlistService.queryPrompt(manifestUrl, GET_METHOD);
             PlaylistStreamingObserverImpl
                     .PlaylistStreamingObserverImplDelegate playlistStreamingObserverImplDelegate =
@@ -87,6 +87,10 @@ public class DownloadUtils {
                         @Override
                         public void onDataCompleted() {
                             try {
+                                if (playlistStreamingObserverImpl != null) {
+                                    playlistStreamingObserverImpl.close();
+                                    playlistStreamingObserverImpl.destroy();
+                                }
                                 playlistService.clearObserverForStreaming();
                                 Queue<Segment> segmentsQueue = HLSParsingUtil.getContentSegments(
                                         hlsManifestFilePath, manifestUrl);
@@ -98,7 +102,7 @@ public class DownloadUtils {
                             }
                         }
                     };
-            PlaylistStreamingObserverImpl playlistStreamingObserverImpl =
+            playlistStreamingObserverImpl =
                     new PlaylistStreamingObserverImpl(playlistStreamingObserverImplDelegate);
             playlistService.addObserverForStreaming(playlistStreamingObserverImpl);
         }
@@ -120,7 +124,7 @@ public class DownloadUtils {
                     new PlaylistStreamingObserverImpl.PlaylistStreamingObserverImplDelegate() {
                         @Override
                         public void onResponseStarted(String url, long contentLength) {
-                            Log.e("playlist", "onResponseStarted : " + url);
+                            // unused for manifest file
                         }
 
                         @Override
@@ -135,6 +139,10 @@ public class DownloadUtils {
                         @Override
                         public void onDataCompleted() {
                             try {
+                                if (playlistStreamingObserverImpl != null) {
+                                    playlistStreamingObserverImpl.close();
+                                    playlistStreamingObserverImpl.destroy();
+                                }
                                 playlistService.clearObserverForStreaming();
                                 downloadedSofar++;
                                 Segment newSegment = segmentsQueue.peek();
@@ -154,7 +162,7 @@ public class DownloadUtils {
                             }
                         }
                     };
-            PlaylistStreamingObserverImpl playlistStreamingObserverImpl =
+            playlistStreamingObserverImpl =
                     new PlaylistStreamingObserverImpl(playlistStreamingObserverImplDelegate);
             playlistService.addObserverForStreaming(playlistStreamingObserverImpl);
         }
