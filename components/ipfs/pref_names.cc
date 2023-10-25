@@ -19,6 +19,10 @@ const char kIPFSBinaryPath[] = "brave.ipfs.binary_path";
 // local node is not available.
 const char kIPFSAutoFallbackToGateway[] = "brave.ipfs.auto_fallback_to_gateway";
 
+// Used to determine whether to start IPFS daemon
+// at the same moment when Brave starts.
+const char kIPFSAlwaysStartMode[] = "brave.ipfs.always_start_mode";
+
 // Deprecated, use kIPFSAutoRedirectToConfiguredGateway instead
 // Used to automatically redirect Gateway resources with x-ipfs-path
 // header to the configured Brave IPFS gateway.
