@@ -114,6 +114,8 @@ interface PageHandler {
   GetFaviconImageData() => (array<uint8>? favicon_image_data);
   OpenBraveLeoSettings();
   OpenURL(url.mojom.Url url);
+  GoPremium();
+  RefreshPremiumSession();
   DisconnectPageContents();
   ClearConversationHistory();
   RetryAPIRequest();

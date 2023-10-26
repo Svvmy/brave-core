@@ -13,7 +13,7 @@ import org.chromium.chrome.browser.settings.SettingsLauncherImpl;
 import org.chromium.components.browser_ui.settings.SettingsLauncher;
 import org.chromium.content_public.browser.WebContents;
 
-/** Launches Brave Leo settings page. */
+/** Launches Brave Leo settings page or subscription. */
 public class BraveLeoSettingsLauncherHelper {
     private static SettingsLauncher sLauncher;
 
@@ -25,6 +25,9 @@ public class BraveLeoSettingsLauncherHelper {
         }
         getLauncher().launchSettingsActivity(context, BraveLeoPreferences.class);
     }
+
+    @CalledByNative
+    private static void goPremium() {}
 
     private static SettingsLauncher getLauncher() {
         return sLauncher != null ? sLauncher : new SettingsLauncherImpl();

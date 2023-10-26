@@ -62,6 +62,8 @@ class AIChatUIPageHandler : public ai_chat::mojom::PageHandler,
   void GetSiteInfo(GetSiteInfoCallback callback) override;
   void OpenBraveLeoSettings() override;
   void OpenURL(const GURL& url) override;
+  void GoPremium() override;
+  void RefreshPremiumSession() override;
   void DisconnectPageContents() override;
   void ClearConversationHistory() override;
   void RetryAPIRequest() override;
