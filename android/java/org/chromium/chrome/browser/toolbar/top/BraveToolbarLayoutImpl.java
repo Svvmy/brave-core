@@ -64,6 +64,7 @@ import org.chromium.base.MathUtils;
 import org.chromium.base.ThreadUtils;
 import org.chromium.base.task.AsyncTask;
 import org.chromium.chrome.R;
+import org.chromium.chrome.browser.AntiAdblockDialogFragment;
 import org.chromium.chrome.browser.BraveRelaunchUtils;
 import org.chromium.chrome.browser.BraveRewardsHelper;
 import org.chromium.chrome.browser.BraveRewardsNativeWorker;
@@ -487,6 +488,19 @@ public abstract class BraveToolbarLayoutImpl extends ToolbarLayout
                                 BravePreferenceKeys.BRAVE_AD_FREE_CALLOUT_DIALOG, true)) {
                     SharedPreferencesManager.getInstance().writeBoolean(
                             BravePreferenceKeys.BRAVE_OPENED_YOUTUBE, true);
+                }
+                showAntiAdblockDialog();
+            }
+
+            private void showAntiAdblockDialog() {
+                try {
+                    AntiAdblockDialogFragment mAntiAdblockDialogFragment =
+                            new AntiAdblockDialogFragment();
+                    mAntiAdblockDialogFragment.show(
+                            BraveActivity.getBraveActivity().getSupportFragmentManager(),
+                            "AntiAdblockDialogFragment");
+                } catch (BraveActivity.BraveActivityNotFoundException e) {
+                    Log.e(TAG, "showAntiAdblockDialog failed " + e);
                 }
             }
 
