@@ -17,6 +17,7 @@ import {
 } from '../../../common/hooks/use-safe-selector'
 
 // Components
+import { LoadingPanel } from '../loading_panel/loading_panel'
 import Tooltip from '../../shared/tooltip/index'
 import CreateSiteOrigin from '../../shared/create-site-origin/index'
 import PanelTab from '../panel-tab'
@@ -24,15 +25,18 @@ import { TransactionInfo } from './transaction-info'
 import { SolanaTransactionDetailBox } from '../transaction-box/solana-transaction-detail-box'
 import { TransactionQueueSteps } from './common/queue'
 import { Footer } from './common/footer'
+import {
+  TxSimulationFailedWarning //
+} from './common/tx_simulation_failed_warning'
 
 // Styles
-import { Skeleton } from '../../shared/loading-skeleton/styles'
+import { Row } from '../../shared/style'
 import {
   TabRow,
   URLText,
+  LearnMoreButton,
   WarningBox,
   WarningTitle,
-  LearnMoreButton,
   WarningBoxTitleRow
 } from '../shared-panel-styles'
 import {
@@ -48,12 +52,14 @@ import {
   TransactionTypeText,
   AccountCircleWrapper,
   ArrowIcon,
-  FromToRow
+  FromToRow,
+  WarningInfoCircleIcon
 } from './style'
 
 type confirmPanelTabs = 'transaction' | 'details'
 
 const onClickLearnMore = () => {
+  // TODO: link is broken
   chrome.tabs.create(
     { url: 'https://support.brave.com/hc/en-us/articles/5546517853325' },
     () => {
@@ -64,7 +70,11 @@ const onClickLearnMore = () => {
   )
 }
 
-export const ConfirmSolanaTransactionPanel = () => {
+export const ConfirmSolanaTransactionPanel = ({
+  retrySimulation
+}: {
+  retrySimulation?: () => void
+}) => {
   // redux
   const activeOrigin = useUnsafeWalletSelector(WalletSelectors.activeOrigin)
   const defaultCurrencies = useUnsafeWalletSelector(
@@ -82,8 +92,6 @@ export const ConfirmSolanaTransactionPanel = () => {
     transactionTitle,
     isSolanaDappTransaction,
     selectedPendingTransaction,
-    onConfirm,
-    onReject,
     queueNextTransaction,
     transactionQueueNumber,
     transactionsQueueLength
@@ -105,17 +113,10 @@ export const ConfirmSolanaTransactionPanel = () => {
     !transactionDetails ||
     !selectedPendingTransaction ||
     !transactionsNetwork ||
-    !fromAccount
+    !fromAccount ||
+    !transactionsQueueLength
   ) {
-    return (
-      <StyledWrapper>
-        <Skeleton
-          width={'100%'}
-          height={'100%'}
-          enableAnimation
-        />
-      </StyledWrapper>
-    )
+    return <LoadingPanel />
   }
 
   return (
@@ -169,12 +170,39 @@ export const ConfirmSolanaTransactionPanel = () => {
 
       {!isSolanaDappTransaction && (
         <>
-          <TransactionAmountBig>
-            {new Amount(transactionDetails.valueExact).formatAsAsset(
-              undefined,
-              transactionDetails.symbol
+          <Row
+            margin={
+              isAssociatedTokenAccountCreation ? '0px 0px 0px 16px' : undefined
+            }
+            alignItems='center'
+            justifyContent='center'
+            gap={'4px'}
+          >
+            <TransactionAmountBig>
+              {new Amount(transactionDetails.valueExact).formatAsAsset(
+                undefined,
+                transactionDetails.symbol
+              )}
+            </TransactionAmountBig>
+            {isAssociatedTokenAccountCreation && (
+              <Tooltip
+                maxWidth={'200px'}
+                minWidth={'180px'}
+                text={
+                  <>
+                    {getLocale(
+                      'braveWalletConfirmTransactionAccountCreationFee'
+                    )}{' '}
+                    <LearnMoreButton onClick={onClickLearnMore}>
+                      {getLocale('braveWalletAllowAddNetworkLearnMoreButton')}
+                    </LearnMoreButton>
+                  </>
+                }
+              >
+                <WarningInfoCircleIcon />
+              </Tooltip>
             )}
-          </TransactionAmountBig>
+          </Row>
 
           <TransactionFiatAmountBig>
             {new Amount(transactionDetails.fiatValue).formatAsFiat(
@@ -221,10 +249,12 @@ export const ConfirmSolanaTransactionPanel = () => {
           />
         )}
       </MessageBox>
-      <Footer
-        onConfirm={onConfirm}
-        onReject={onReject}
-      />
+
+      {retrySimulation && (
+        <TxSimulationFailedWarning retrySimulation={retrySimulation} />
+      )}
+
+      <Footer />
     </StyledWrapper>
   )
 }

@@ -22,7 +22,7 @@ import PanelTab from '../panel-tab'
 import { BitcoinTransactionInfo } from './bitcoin-transaction-info'
 import { BitcoinTransactionDetailBox } from '../transaction-box/bitcoin-transaction-detail-box'
 import { TransactionQueueSteps } from './common/queue'
-import { Footer } from './common/footer'
+import { SignTransactionFooter } from './common/footer'
 
 // Styles
 import { Skeleton } from '../../shared/loading-skeleton/styles'
@@ -179,7 +179,7 @@ export const ConfirmBitcoinTransactionPanel = () => {
           />
         )}
       </MessageBox>
-      <Footer
+      <SignTransactionFooter
         onConfirm={onConfirm}
         onReject={onReject}
       />

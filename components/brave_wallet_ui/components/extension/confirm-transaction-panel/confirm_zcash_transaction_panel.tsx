@@ -20,7 +20,7 @@ import Tooltip from '../../shared/tooltip/index'
 import CreateSiteOrigin from '../../shared/create-site-origin/index'
 import PanelTab from '../panel-tab'
 import { TransactionQueueSteps } from './common/queue'
-import { Footer } from './common/footer'
+import { SignTransactionFooter } from './common/footer'
 
 // Styles
 import { Skeleton } from '../../shared/loading-skeleton/styles'
@@ -179,7 +179,7 @@ export const ConfirmZCashTransactionPanel = () => {
           />
         )}
       </MessageBox>
-      <Footer
+      <SignTransactionFooter
         onConfirm={onConfirm}
         onReject={onReject}
       />

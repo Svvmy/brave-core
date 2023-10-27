@@ -2868,7 +2868,8 @@ export function createWalletApi() {
                 baseQuery
               ) => {
                 try {
-                  const { ethTxManagerProxy } = baseQuery(undefined).data
+                  const { data: api } = baseQuery(undefined)
+                  const { ethTxManagerProxy } = api
 
                   const isEIP1559 =
                     payload.maxPriorityFeePerGas !== undefined &&
@@ -2937,8 +2938,8 @@ export function createWalletApi() {
               },
               invalidatesTags: (res, err, arg) =>
                 err
-                  ? [TX_CACHE_TAGS.TXS_LIST]
-                  : [TX_CACHE_TAGS.ID(arg.txMetaId)]
+                  ? [TX_CACHE_TAGS.TXS_LIST, 'UNKNOWN_ERROR']
+                  : [TX_CACHE_TAGS.ID(arg.txMetaId), 'GasEstimation1559']
             }),
             updateUnapprovedTransactionSpendAllowance: mutation<
               { success: boolean },

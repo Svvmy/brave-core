@@ -4,12 +4,13 @@
 // you can obtain one at https://mozilla.org/MPL/2.0/.
 
 import * as React from 'react'
+import { skipToken } from '@reduxjs/toolkit/query/react'
 
 // Utils
-import { reduceAddress } from '../../../utils/reduce-address'
-import Amount from '../../../utils/amount'
 import { getLocale } from '../../../../common/locale'
+import { reduceAddress } from '../../../utils/reduce-address'
 import { WalletSelectors } from '../../../common/selectors'
+import Amount from '../../../utils/amount'
 
 // Hooks
 import { usePendingTransactions } from '../../../common/hooks/use-pending-transaction'
@@ -21,23 +22,47 @@ import {
 } from '../../../common/hooks/use-safe-selector'
 
 // Components
+import { EditPendingTransactionGas } from './common/gas'
+import { Footer } from './common/footer'
+import { Origin } from './common/origin'
+import { Tooltip } from '../../shared/tooltip/index'
+import { TransactionQueueSteps } from './common/queue'
+import {
+  PendingTransactionNetworkFeeAndSettings //
+} from '../pending-transaction-network-fee/pending-transaction-network-fee'
 import CreateSiteOrigin from '../../shared/create-site-origin/index'
-import Tooltip from '../../shared/tooltip/index'
-import withPlaceholderIcon from '../../shared/create-placeholder-icon'
+import { withPlaceholderIcon } from '../../shared/create-placeholder-icon'
 import { PanelTab } from '../panel-tab/index'
 import { TransactionDetailBox } from '../transaction-box/index'
-import EditAllowance from '../edit-allowance'
-import AdvancedTransactionSettingsButton from '../advanced-transaction-settings/button'
-import AdvancedTransactionSettings from '../advanced-transaction-settings'
+import { EditAllowance } from '../edit-allowance/index'
+import {
+  AdvancedTransactionSettings //
+} from '../advanced-transaction-settings/index'
+import {
+  AdvancedTransactionSettingsButton //
+} from '../advanced-transaction-settings/button/index'
 import { Erc20ApproveTransactionInfo } from './erc-twenty-transaction-info'
 import { TransactionInfo } from './transaction-info'
 import { NftIcon } from '../../shared/nft-icon/nft-icon'
-import { Footer } from './common/footer'
-import { TransactionQueueSteps } from './common/queue'
-import { Origin } from './common/origin'
-import { EditPendingTransactionGas } from './common/gas'
+import {
+  TxSimulationFailedWarning //
+} from './common/tx_simulation_failed_warning'
 
 // Styled Components
+import { Column, Row } from '../../shared/style'
+import {
+  TabRow,
+  Description,
+  PanelTitle,
+  AccountCircle,
+  AddressAndOrb,
+  AddressText,
+  URLText,
+  WarningBox,
+  WarningTitle,
+  LearnMoreButton,
+  WarningBoxTitleRow,
+} from '../shared-panel-styles'
 import {
   StyledWrapper,
   FromCircle,
@@ -56,22 +81,8 @@ import {
   ContractButton,
   ExplorerIcon
 } from './style'
-import { Skeleton } from '../../shared/loading-skeleton/styles'
-
-import {
-  TabRow,
-  Description,
-  PanelTitle,
-  AccountCircle,
-  AddressAndOrb,
-  AddressText,
-  URLText,
-  WarningBox,
-  WarningTitle,
-  LearnMoreButton,
-  WarningBoxTitleRow
-} from '../shared-panel-styles'
-import { Column, Row } from '../../shared/style'
+import { NetworkFeeRow } from './common/style'
+import { LoadingPanel } from '../loading_panel/loading_panel'
 
 type confirmPanelTabs = 'transaction' | 'details'
 
@@ -79,17 +90,23 @@ const ICON_CONFIG = { size: 'big', marginLeft: 0, marginRight: 0 } as const
 const NftAssetIconWithPlaceholder = withPlaceholderIcon(NftIcon, ICON_CONFIG)
 
 const onClickLearnMore = () => {
-  chrome.tabs.create(
-    { url: 'https://support.brave.com/hc/en-us/articles/5546517853325' },
-    () => {
-      if (chrome.runtime.lastError) {
-        console.error('tabs.create failed: ' + chrome.runtime.lastError.message)
-      }
+  // TODO: link broken
+  chrome.tabs.create({ url: 'https://support.brave.com/hc/en-us/articles/5546517853325' }, () => {
+    if (chrome.runtime.lastError) {
+      console.error('tabs.create failed: ' + chrome.runtime.lastError.message)
     }
-  )
+  })
 }
 
-export const ConfirmTransactionPanel = () => {
+/**
+ *
+ * @returns For EVM & Filecoin transactions
+ */
+export const ConfirmTransactionPanel = ({
+  retrySimulation
+}: {
+  retrySimulation?: () => void
+}) => {
   // redux
   const activeOrigin = useUnsafeWalletSelector(WalletSelectors.activeOrigin)
   const defaultFiatCurrency = useSafeWalletSelector(
@@ -115,8 +132,6 @@ export const ConfirmTransactionPanel = () => {
     isCurrentAllowanceUnlimited,
     currentTokenAllowance,
     selectedPendingTransaction,
-    onConfirm,
-    onReject,
     gasFee,
     insufficientFundsError,
     insufficientFundsForGasError,
@@ -127,12 +142,13 @@ export const ConfirmTransactionPanel = () => {
 
   // queries
   const { data: byteCode, isLoading } = useGetAddressByteCodeQuery(
-    {
-      address: transactionDetails?.recipient ?? '',
-      coin: transactionDetails?.coinType ?? -1,
-      chainId: transactionDetails?.chainId ?? ''
-    },
-    { skip: !transactionDetails }
+    transactionDetails
+      ? {
+          address: transactionDetails.recipient ?? '',
+          coin: transactionDetails.coinType ?? -1,
+          chainId: transactionDetails.chainId ?? ''
+        }
+      : skipToken
   )
 
   // computed
@@ -164,15 +180,7 @@ export const ConfirmTransactionPanel = () => {
 
   // render
   if (!transactionDetails || !selectedPendingTransaction || !fromAccount) {
-    return (
-      <StyledWrapper>
-        <Skeleton
-          width={'100%'}
-          height={'100%'}
-          enableAnimation
-        />
-      </StyledWrapper>
-    )
+    return <LoadingPanel />
   }
 
   if (isEditing) {
@@ -403,10 +411,20 @@ export const ConfirmTransactionPanel = () => {
         )}
       </MessageBox>
 
-      <Footer
-        onConfirm={onConfirm}
-        onReject={onReject}
-      />
+      <NetworkFeeRow>
+        <PendingTransactionNetworkFeeAndSettings
+          onToggleEditGas={onToggleEditGas}
+          feeDisplayMode='fiat'
+        />
+      </NetworkFeeRow>
+
+      {retrySimulation && (
+        <TxSimulationFailedWarning
+          retrySimulation={retrySimulation}
+        />
+      )}
+
+      <Footer />
     </StyledWrapper>
   )
 }

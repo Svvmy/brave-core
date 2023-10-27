@@ -5,6 +5,11 @@
 import { provideStrings } from '../../../.storybook/locale'
 
 provideStrings({
+  // Entities
+  braveWalletContract: 'Contract',
+  braveWalletStaker: 'Staker',
+  braveWalletWithdrawer: 'Withdrawer',
+
   // App Categories
   braveWalletDefiCategory: 'Defi apps',
   braveWalletNftCategory: 'NFT marketplaces',
@@ -172,6 +177,10 @@ provideStrings({
   braveWalletButtonCancel: 'Cancel',
   braveWalletButtonSaveChanges: 'Save changes',
   braveWalletLearnMore: 'Learn more',
+  braveWalletButtonNoThanks: 'No thanks',
+  braveWalletButtonEnable: 'Enable',
+  braveWalletProceedButton: 'Proceed',
+  braveWalletButtonRetry: 'Retry',
 
   // Onboarding - Welcome
   braveWalletWelcomeTitle:
@@ -600,6 +609,8 @@ provideStrings({
   braveWalletSignTransactionEIP712MessageDomain: 'Domain',
   braveWalletSignTransactionButton: 'Sign',
   braveWalletApproveTransaction: 'Approve transaction',
+  braveWalletRiskOfLossAction: 'Unsafe action with risk of loss',
+  braveWalletBraveWalletUntrustedRequestWarning: 'This request appears unstable or malicious, and may leave you vulnerable to theft. Do not continue unless you trust the app.',
 
   // Sign in with Ethereum
   braveWalletSignInWithBraveWallet: 'Sign in with Brave Wallet',
@@ -786,6 +797,15 @@ provideStrings({
   braveWalletTransactionApproveUnlimited: 'Unlimited',
   braveWalletApprovalTransactionIntent: 'approve',
 
+  // Transaction Simulation
+  braveWalletScanningTransaction: 'Scanning transaction',
+  braveWalletTransactionPreviewFailed: 'Transaction preview failed',
+  
+  // Transaction Simulation Event Grouping Headers
+  braveWalletEstimatedBalanceChange: 'Estimated balance change',
+  braveWalletApprovalDetails: 'Approval details',
+  braveWalletAuthorityChange: 'Authority change',
+
   // Transaction Simulation Events
   braveWalletReceive: 'Receive',
   braveWalletFrom: 'From',
@@ -794,6 +814,59 @@ provideStrings({
   braveWalletTokenIsVerified: 'This token is verified',
   braveWalletTokenIsVerifiedByLists: 'This token is verified on $1 lists',
   braveWalletSpenderAddress: 'Spender: $1',
+
+  // Transaction Simulation Warnings
+  braveWalletSimulationWarningApprovalToEoa:
+    'You’re giving someone else permission to transfer tokens on your behalf.',
+  braveWalletSimulationWarningBulkApprovalsRequest:
+    'This requests permission to transfer many tokens, ' +
+    'which is usually an attempt at theft.',
+  braveWalletSimulationWarningCopyCatDomain: 'This site may be a fake',
+  braveWalletSimulationWarningDanglingApproval:
+    'This DApp will be able to move tokens from your account later on.',
+  braveWalletSimulationWarningKnownMalicious:
+    'This site is flagged as high risk and will ' +
+    'likely attempt to steal your funds.',
+  braveWalletSimulationWarningMainnetReplayPossible:
+    'A copy of your transaction was found; ' +
+    'approving this may result in lost funds.',
+  braveWalletSimulationWarningNewDomain:
+    'This domain hasn’t been verified yet. ' +
+    'Continue only if you trust the site.',
+  braveWalletSimulationWarningPoisonedAddress:
+    'Double-check this address' +
+    ' as it may be impersonating a previous contact of yours.',
+  braveWalletSimulationWarningSetOwnerAuthority:
+    'This transfers ownership of your token balance to someone else.',
+  braveWalletSimulationWarningSuspectedMalicious:
+    'This site is flagged as unsafe and/or malicious. ' +
+    'Continuing may result in losses.',
+  braveWalletSimulationWarningTooManyTransactionsCritical:
+    'This will approve over 200 actions. ' +
+    'Unless planned, this may be malicious.',
+  braveWalletSimulationWarningTooManyTransactions:
+    'This requests over 200 approvals' +
+    '; which is usually an attempt to drain your balances.',
+  braveWalletSimulationWarningTradeForNothing:
+    'You’re exchanging tokens for nothing in return. ' +
+    'This is likely a mistake.',
+  braveWalletSimulationWarningTransferringErc20ToOwnContract:
+    'You’re sending funds to a token’s own address' +
+    ' where they’ll be lost forever.',
+  braveWalletSimulationWarningUserAccountOwnerChange:
+    'This transfers ownership of your account and balances to someone else.',
+
+  // Transaction Simulation Errors
+  braveWalletSimulationErrorInsufficientFundsForFee:
+    'Insufficient funds to cover the network gas fee.',
+  braveWalletSimulationErrorInsufficientFunds:
+    'Insufficient funds to complete the transaction.',
+  braveWalletSimulationErrorTransactionReverted:
+    'Transaction is likely to fail and revert. ' +
+    'Attempting will still incur gas costs.',
+  braveWalletSimulationUnexpectedError:
+    'Unexpected error with transaction preview. ' +
+    'Approving may be unsafe.',
 
   // Asset Detail Accounts (Empty)
   braveWalletNoAccountsWithABalance: 'No available accounts',
@@ -1119,6 +1192,7 @@ provideStrings({
   // Warnings
   braveWalletNonAsciiCharactersInMessageWarning:
     'Non-ASCII characters detected!',
+  braveWalletFoundIssues: 'We found $1 issues.',
 
   // ASCII toggles
   braveWalletViewEncodedMessage: 'View original message',
@@ -1253,5 +1327,19 @@ provideStrings({
   braveWalletLogIn: 'Log in',
   braveWalletViewOn: 'View on $1',
   braveWalletRewardsSettings: 'Rewards settings',
-  braveWalletPlatforms: 'Platforms'
+  braveWalletPlatforms: 'Platforms',
+
+  // Transaction Simulations Opt-in
+  braveWalletEnableEnhancedTransactionDetailsTitle:
+    'Enable Enhanced Transaction Details to:',
+  braveWalletTransactionSimulationSeeEstimates: 'See estimated balance change',
+  braveWalletTransactionSimulationDetectMalicious:
+    'Identify potentially malicious transactions',
+  braveWalletTransactionSimulationDetectPhishing:
+    'Help detect phishing attempts',
+  braveWalletTransactionSimulationTerms:
+    'Brave works with a partner to provide this service. ' +
+    'By enabling, you agree to share unsigned transactions ' +
+    'and their DApp URLs with our partner.',
+  braveWalletChangeAnytimeInSettings: 'Change anytime in $1Settings$2.'
 })
