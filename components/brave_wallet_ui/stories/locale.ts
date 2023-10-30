@@ -172,6 +172,8 @@ provideStrings({
   braveWalletButtonCancel: 'Cancel',
   braveWalletButtonSaveChanges: 'Save changes',
   braveWalletLearnMore: 'Learn more',
+  braveWalletButtonNoThanks: 'No thanks',
+  braveWalletButtonEnable: 'Enable',
 
   // Onboarding - Welcome
   braveWalletWelcomeTitle:
@@ -1250,5 +1252,19 @@ provideStrings({
   braveWalletLogIn: 'Log in',
   braveWalletViewOn: 'View on $1',
   braveWalletRewardsSettings: 'Rewards settings',
-  braveWalletPlatforms: 'Platforms'
+  braveWalletPlatforms: 'Platforms',
+
+  // Transaction Simulations Opt-in
+  braveWalletEnableEnhancedTransactionDetailsTitle:
+    'Enable Enhanced Transaction Details to:',
+  braveWalletTransactionSimulationSeeEstimates: 'See estimated balance change',
+  braveWalletTransactionSimulationDetectMalicious:
+    'Identify potentially malicious transactions',
+  braveWalletTransactionSimulationDetectPhishing:
+    'Help detect phishing attempts',
+  braveWalletTransactionSimulationTerms:
+    'Brave works with a partner to provide this service. ' +
+    'By enabling, you agree to share unsigned transactions ' +
+    'and their DApp URLs with our partner.',
+  braveWalletChangeAnytimeInSettings: 'Change anytime in $1Settings$2.'
 })
