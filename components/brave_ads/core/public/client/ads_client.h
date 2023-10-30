@@ -115,13 +115,6 @@ class ADS_EXPORT AdsClient {
   virtual void GetScheduledCaptcha(const std::string& payment_id,
                                    GetScheduledCaptchaCallback callback) = 0;
 
-  // Show a notification indicating that a scheduled captcha with the given
-  // |captcha_id| must be solved for the given |payment_id| before the user can
-  // continue to be served ads.
-  virtual void ShowScheduledCaptchaNotification(
-      const std::string& payment_id,
-      const std::string& captcha_id) = 0;
-
   // Run a database transaction. The callback takes one argument -
   // |mojom::DBCommandResponseInfoPtr| containing the info of the transaction.
   virtual void RunDBTransaction(mojom::DBTransactionInfoPtr transaction,

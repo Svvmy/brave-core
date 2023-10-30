@@ -451,7 +451,8 @@ void Account::OnDidRetryRefillingConfirmationTokens() {
 void Account::OnCaptchaRequiredToRefillConfirmationTokens(
     const std::string& captcha_id) {
   if (wallet_) {
-    ShowScheduledCaptchaNotification(wallet_->payment_id, captcha_id);
+    AdsNotifierManager::GetInstance().NotifySolveCaptchaToServeAds(
+        wallet_->payment_id, captcha_id);
   }
 }
 
