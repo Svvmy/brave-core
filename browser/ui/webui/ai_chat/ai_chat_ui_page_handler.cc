@@ -88,6 +88,10 @@ AIChatUIPageHandler::~AIChatUIPageHandler() = default;
 void AIChatUIPageHandler::SetClientPage(
     mojo::PendingRemote<ai_chat::mojom::ChatUIPage> page) {
   page_.Bind(std::move(page));
+
+  if (active_chat_tab_helper_ && active_chat_tab_helper_->HasPendingRequest()) {
+    OnRequestPending();
+  }
 }
 
 void AIChatUIPageHandler::GetModels(GetModelsCallback callback) {
@@ -396,6 +400,12 @@ void AIChatUIPageHandler::OnPageHasContent(bool page_contents_is_truncated) {
     page_->OnSiteInfoChanged(
         is_fetching_content,
         site_info.has_value() ? site_info.value().Clone() : nullptr);
+  }
+}
+
+void AIChatUIPageHandler::OnRequestPending() {
+  if (page_.is_bound()) {
+    page_->OnRequestPending();
   }
 }
 

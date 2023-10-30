@@ -20,7 +20,8 @@ using FetchPageContentCallback =
     base::OnceCallback<void(std::string, bool is_video)>;
 
 void FetchPageContent(content::WebContents* web_contents,
-                      FetchPageContentCallback callback);
+                      FetchPageContentCallback callback,
+                      bool has_user_opted_in);
 
 }  // namespace ai_chat
 

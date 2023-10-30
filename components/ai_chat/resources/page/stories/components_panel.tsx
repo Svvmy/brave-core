@@ -109,7 +109,8 @@ export default {
     isPremiumUserDisconnected: false,
     currentErrorState: 'ConnectionIssue' satisfies keyof typeof mojom.APIError,
     suggestedQuestionsPref: 'Unset' satisfies keyof typeof mojom.AutoGenerateQuestionsPref,
-    model: MODELS[0].name
+    model: MODELS[0].name,
+    showAgreementModal: false,
   },
   decorators: [
     (Story: any, options: any) => {
@@ -150,7 +151,8 @@ export default {
         apiHasError,
         shouldDisableUserInput,
         isPremiumUser: options.args.isPremiumUser,
-        isPremiumUserDisconnected: options.args.isPremiumUserDisconnected
+        isPremiumUserDisconnected: options.args.isPremiumUserDisconnected,
+        showAgreementModal: options.args.showAgreementModal,
       }
 
       return (

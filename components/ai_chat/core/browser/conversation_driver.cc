@@ -300,8 +300,7 @@ void ConversationDriver::MaybeGeneratePageText() {
   // for more page content (e.g. video transcript).
   // Perf: make sure we're not doing this when the feature
   // won't be used (e.g. not opted in or no active conversation).
-  if (is_page_text_fetch_in_progress_ || !article_text_.empty() ||
-      !HasUserOptedIn() || !is_conversation_active_ ||
+  if (is_page_text_fetch_in_progress_ || !article_text_.empty() || !is_conversation_active_ ||
       !IsDocumentOnLoadCompletedInPrimaryMainFrame()) {
     return;
   }
@@ -508,6 +507,9 @@ void ConversationDriver::MakeAPIRequestWithConversationHistoryUpdate(
     // opted-in yet.
     pending_request_ =
         std::make_unique<mojom::ConversationTurn>(std::move(turn));
+    // Invoking this before the creation of the page handler means the pending
+    // request will not be reported.
+    OnRequestPending();
     return;
   }
 
@@ -673,6 +675,10 @@ bool ConversationDriver::IsPageContentsTruncated() {
           GetCurrentModel().max_page_content_length);
 }
 
+bool ConversationDriver::HasPendingRequest() {
+  return pending_request_ != nullptr;
+}
+
 void ConversationDriver::GetPremiumStatus(
     mojom::PageHandler::GetPremiumStatusCallback callback) {
   credential_manager_->GetPremiumStatus(
@@ -690,6 +696,12 @@ void ConversationDriver::OnPremiumStatusReceived(
   }
   last_premium_status_ = premium_status;
   std::move(parent_callback).Run(premium_status);
+}
+
+void ConversationDriver::OnRequestPending() {
+  for (auto& obs : observers_) {
+    obs.OnRequestPending();
+  }
 }
 
 }  // namespace ai_chat

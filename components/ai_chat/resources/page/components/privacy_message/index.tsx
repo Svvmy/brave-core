@@ -7,15 +7,18 @@ import * as React from 'react'
 
 import { getLocale } from '$web-common/locale'
 import { Url } from 'gen/url/mojom/url.mojom.m.js'
+import Button from '@brave/leo/react/button'
 
 import styles from './style.module.scss'
-import privacyGraphicUrl from '../../assets/privacy_graphic.svg'
 import getPageHandlerInstance from '../../api/page_handler'
 import formatMessage from '$web-common/formatMessage'
+import DataContext from '../../state/context'
 
 const WIKI_URL = "https://github.com/brave/brave-browser/wiki/Brave-Leo"
 
 function PrivacyMessage () {
+  const context = React.useContext(DataContext)
+
   const handleWikiLinkClick = () => {
     const mojomUrl = new Url()
     mojomUrl.url = WIKI_URL
@@ -34,17 +37,16 @@ function PrivacyMessage () {
   })
 
   return (
-    <div className={styles.box}>
-      <figure>
-        <img src={privacyGraphicUrl}
-          alt="Illustration: window and chat bubble, representing communication" />
-      </figure>
-      <section>
-        <b>{getLocale('aboutTitle')}</b>
-        <p>{aboutDescription}</p>
-        <p>{getLocale('aboutDescription_2')}</p>
-        <p>{getLocale('aboutDescription_3')}</p>
-      </section>
+    <div className={styles.overlay}>
+      <div className={styles.box}>
+        <section>
+          <h4>{getLocale('aboutTitle')}</h4>
+          <p>{aboutDescription}</p>
+          <p>{getLocale('aboutDescription_2')}</p>
+          <p>{getLocale('aboutDescription_3')}</p>
+          <Button onClick={context.handleAgreeClick}>{getLocale('acceptButtonLabel')}</Button>
+        </section>
+      </div>
     </div>
   )
 }

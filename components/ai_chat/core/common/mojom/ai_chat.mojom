@@ -149,4 +149,5 @@ interface ChatUIPage {
   // |is_fetching| will be |true|.
   OnSiteInfoChanged(bool is_fetching, SiteInfo? info);
   OnFaviconImageDataChanged(array<uint8> favicon_image_data);
+  OnRequestPending();
 };

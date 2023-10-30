@@ -20,7 +20,8 @@ function ConversationList() {
     isGenerating,
     conversationHistory,
     suggestedQuestions,
-    shouldDisableUserInput
+    shouldDisableUserInput,
+    hasAcceptedAgreement
   } = React.useContext(DataContext)
   const portalRefs = React.useRef<Map<number, Element>>(new Map())
 
@@ -97,7 +98,7 @@ function ConversationList() {
           )
         })}
       </div>
-      {suggestedQuestions.length > 0 && (
+      {hasAcceptedAgreement && (suggestedQuestions.length > 0) && (
         <div className={styles.suggestedQuestionsBox}>
           <div className={styles.suggestedQuestionLabel}>
             <Icon name='product-brave-leo' />

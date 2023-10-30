@@ -47,6 +47,7 @@ class ConversationDriver {
         mojom::AutoGenerateQuestionsPref auto_generate) {}
     virtual void OnFaviconImageDataChanged() {}
     virtual void OnPageHasContent(bool page_contents_is_truncated) {}
+    virtual void OnRequestPending() {}
   };
 
   ConversationDriver(raw_ptr<PrefService> pref_service,
@@ -87,6 +88,7 @@ class ConversationDriver {
   void GetPremiumStatus(
       mojom::PageHandler::GetPremiumStatusCallback callback);
   bool IsPageContentsTruncated();
+  bool HasPendingRequest();
 
  protected:
   virtual GURL GetPageURL() const = 0;
@@ -128,6 +130,7 @@ class ConversationDriver {
   void OnPremiumStatusReceived(
       mojom::PageHandler::GetPremiumStatusCallback parent_callback,
       mojom::PremiumStatus premium_status);
+  void OnRequestPending();
 
   mojom::AutoGenerateQuestionsPref GetAutoGeneratePref();
   void SetAPIError(const mojom::APIError& error);

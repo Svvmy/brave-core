@@ -88,7 +88,14 @@ base::span<const webui::LocalizedString> GetLocalizedStrings() {
       {"gotItButtonLabel", IDS_CHAT_UI_GOT_IT_BUTTON_LABEL},
       {"pageContentTooLongWarning", IDS_CHAT_UI_PAGE_CONTENT_TOO_LONG_WARNING},
       {"errorConversationEnd", IDS_CHAT_UI_CONVERSATION_END_ERROR},
-      {"leoSettingsTooltipLabel", IDS_CHAT_UI_LEO_SETTINGS_TOOLTIP_LABEL}};
+      {"leoSettingsTooltipLabel", IDS_CHAT_UI_LEO_SETTINGS_TOOLTIP_LABEL},
+      {"summarizePageButtonLabel", IDS_CHAT_UI_SUMMARIZE_PAGE},
+      {"welcomeGuideTitle", IDS_CHAT_UI_WELCOME_GUIDE_TITLE},
+      {"siteHelpCardTitle", IDS_CHAT_UI_SITE_HELP_CARD_TITLE},
+      {"siteHelpCardDesc", IDS_CHAT_UI_SITE_HELP_CARD_DESC},
+      {"siteHelpCardDescWithAction", IDS_CHAT_UI_SITE_HELP_CARD_WITH_ACTION},
+      {"chatCardTitle", IDS_CHAT_UI_CHAT_CARD_TITLE},
+      {"chatCardDesc", IDS_CHAT_UI_CHAT_CARD_DESC}};
 
   return kLocalizedStrings;
 }

@@ -71,4 +71,11 @@ provideStrings({
   pageContentTooLongWarning: 'The page you\'re trying to summarize is too long. Some context could be missing from the conversation.',
   errorConversationEnd: 'This conversation is too long and cannot continue. There may be other models available with which Leo is capable of maintaining accuracy for longer conversations.',
   leoSettingsTooltipLabel: 'Leo settings',
+  summarizePageButtonLabel: 'Summarize this page',
+  welcomeGuideTitle: 'Hi, I\'m Leo! $1An AI-powered intelligent assistant, built right into Brave.$2',
+  siteHelpCardTitle: 'Need help with a website?',
+  siteHelpCardDesc: 'I can help you summarizing articles, expanding on a site\'s content and much more.',
+  siteHelpCardDescWithAction: 'I can help you summarizing articles, expanding on a site\'s content and much more. Not sure where to start? Try this:',
+  chatCardTitle: 'Just want to chat?',
+  chatCardDesc: 'Ask me anything! We can talk about any topic you want. I\'m always learning and improving to provide better answers.'
 })

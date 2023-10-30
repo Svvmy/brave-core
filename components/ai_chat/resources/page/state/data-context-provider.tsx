@@ -45,6 +45,7 @@ function DataContextProvider (props: DataContextProviderProps) {
   const [canShowPremiumPrompt, setCanShowPremiumPrompt] = React.useState<boolean | undefined>()
   const [hasDismissedLongPageWarning, setHasDismissedLongPageWarning] = React.useState<boolean>(false)
   const [hasDismissedLongConversationInfo, setHasDismissedLongConversationInfo] = React.useState<boolean>(false)
+  const [showAgreementModal, setShowAgreementModal] = React.useState(false)
 
   // Provide a custom handler for setCurrentModel instead of a useEffect
   // so that we can track when the user has changed a model in
@@ -138,6 +139,7 @@ function DataContextProvider (props: DataContextProviderProps) {
 
   const handleAgreeClick = () => {
     setHasAcceptedAgreement(true)
+    setShowAgreementModal(false)
     getPageHandlerInstance().pageHandler.markAgreementAccepted()
   }
 
@@ -269,6 +271,10 @@ function DataContextProvider (props: DataContextProviderProps) {
       setCurrentModelKey(modelKey)
     })
 
+    getPageHandlerInstance().callbackRouter.onRequestPending.addListener(() => {
+      setShowAgreementModal(true)
+    })
+
     // Since there is no server-side event for premium status changing,
     // we should check often. And since purchase or login is performed in
     // a separate WebContents, we can check when focus is returned here.
@@ -304,6 +310,7 @@ function DataContextProvider (props: DataContextProviderProps) {
     canShowPremiumPrompt,
     shouldShowLongPageWarning,
     shouldShowLongConversationInfo,
+    showAgreementModal,
     setCurrentModel,
     switchToDefaultModel,
     goPremium,
