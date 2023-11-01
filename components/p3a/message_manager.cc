@@ -44,9 +44,11 @@ MessageManager::MessageManager(PrefService& local_state,
 
   // Init log stores.
   for (MetricLogType log_type : kAllMetricLogTypes) {
-    json_log_stores_[log_type] =
-        std::make_unique<MetricLogStore>(*this, *local_state_, false, log_type);
-    json_log_stores_[log_type]->LoadPersistedUnsentLogs();
+    if (!features::IsJSONDeprecated(log_type)) {
+      json_log_stores_[log_type] = std::make_unique<MetricLogStore>(
+          *this, *local_state_, false, log_type);
+      json_log_stores_[log_type]->LoadPersistedUnsentLogs();
+    }
   }
   if (features::IsConstellationEnabled()) {
     constellation_prep_log_store_ = std::make_unique<MetricLogStore>(
@@ -76,11 +78,13 @@ void MessageManager::Init(
       config_.get());
 
   for (MetricLogType log_type : kAllMetricLogTypes) {
-    json_upload_schedulers_[log_type] = std::make_unique<Scheduler>(
-        base::BindRepeating(&MessageManager::StartScheduledUpload,
-                            base::Unretained(this), false, log_type),
-        config_->randomize_upload_interval, config_->average_upload_interval);
-    json_upload_schedulers_[log_type]->Start();
+    if (!features::IsJSONDeprecated(log_type)) {
+      json_upload_schedulers_[log_type] = std::make_unique<Scheduler>(
+          base::BindRepeating(&MessageManager::StartScheduledUpload,
+                              base::Unretained(this), false, log_type),
+          config_->randomize_upload_interval, config_->average_upload_interval);
+      json_upload_schedulers_[log_type]->Start();
+    }
   }
   rotation_scheduler_ = std::make_unique<RotationScheduler>(
       *local_state_, config_.get(),
@@ -124,14 +128,18 @@ void MessageManager::UpdateMetricValue(std::string_view histogram_name,
                                                  bucket);
     }
   }
-  json_log_stores_[log_type].get()->UpdateValue(std::string(histogram_name),
-                                                bucket);
+  auto* log_store = json_log_stores_[log_type].get();
+  if (log_store) {
+    log_store->UpdateValue(std::string(histogram_name), bucket);
+  }
 }
 
 void MessageManager::RemoveMetricValue(std::string_view histogram_name) {
   for (MetricLogType log_type : kAllMetricLogTypes) {
-    json_log_stores_[log_type]->RemoveValueIfExists(
-        std::string(histogram_name));
+    auto* log_store = json_log_stores_[log_type].get();
+    if (log_store) {
+      log_store->RemoveValueIfExists(std::string(histogram_name));
+    }
   }
   if (features::IsConstellationEnabled()) {
     constellation_prep_log_store_->RemoveValueIfExists(
@@ -141,7 +149,10 @@ void MessageManager::RemoveMetricValue(std::string_view histogram_name) {
 
 void MessageManager::DoJsonRotation(MetricLogType log_type) {
   VLOG(2) << "MessageManager doing json rotation at " << base::Time::Now();
-  json_log_stores_[log_type]->ResetUploadStamps();
+  auto* log_store = json_log_stores_[log_type].get();
+  if (log_store) {
+    log_store->ResetUploadStamps();
+  }
   delegate_->OnRotation(log_type, false);
 }
 
@@ -172,11 +183,13 @@ void MessageManager::OnLogUploadComplete(bool is_ok,
   } else {
     log_store = (metrics::LogStore*)json_log_stores_[log_type].get();
     scheduler = json_upload_schedulers_[log_type].get();
+    CHECK(log_store);
     if (is_ok) {
       delegate_->OnMetricCycled(json_log_stores_[log_type]->staged_log_key(),
                                 false);
     }
   }
+  CHECK(scheduler);
   if (is_ok) {
     log_store->MarkStagedLogAsSent();
     log_store->DiscardStagedLog();
@@ -239,6 +252,8 @@ void MessageManager::StartScheduledUpload(bool is_constellation,
     scheduler = json_upload_schedulers_[log_type].get();
     logging_prefix += "JSON ";
   }
+  CHECK(log_store);
+  CHECK(scheduler);
   logging_prefix += MetricLogTypeToString(log_type);
   logging_prefix += ")";
 
