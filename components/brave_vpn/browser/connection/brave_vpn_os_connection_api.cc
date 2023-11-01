@@ -264,4 +264,6 @@ void BraveVPNOSConnectionAPI::ToggleConnection() {
   can_disconnect ? Disconnect() : Connect();
 }
 
+void BraveVPNOSConnectionAPI::InstallSystemServices() {}
+
 }  // namespace brave_vpn
