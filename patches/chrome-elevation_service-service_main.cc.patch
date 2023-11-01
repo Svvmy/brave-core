@@ -1,0 +1,13 @@
+diff --git a/chrome/elevation_service/service_main.cc b/chrome/elevation_service/service_main.cc
+index ef400534ef15cc8b7aeab32f0e71c664e7e5c0d3..7984d8b912fe4cc2d2bda9af8fe4b384e495a8de 100644
+--- a/chrome/elevation_service/service_main.cc
++++ b/chrome/elevation_service/service_main.cc
+@@ -32,7 +32,7 @@ namespace {
+ // Command line switch "--console" runs the service interactively for
+ // debugging purposes.
+ constexpr char kConsoleSwitchName[] = "console";
+-constexpr wchar_t kWindowsServiceName[] = L"ChromeElevationService";
++constexpr wchar_t kWindowsServiceName[] = L"BraveDevelopmentElevationService";
+ 
+ }  // namespace
+ 
