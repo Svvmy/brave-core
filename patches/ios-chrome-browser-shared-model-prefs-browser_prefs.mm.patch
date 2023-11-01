@@ -1,8 +1,8 @@
 diff --git a/ios/chrome/browser/shared/model/prefs/browser_prefs.mm b/ios/chrome/browser/shared/model/prefs/browser_prefs.mm
-index 1302fdfadd00f95ff1664fa112ba3b206b489d51..6ea334dbb54c4f4efbc14ea391171bc601210c95 100644
+index 198fce74c754826e031384ee7682ac1654799704..8f9f46f38c6e458c8a6c1b8a2bb957669e32a2cd 100644
 --- a/ios/chrome/browser/shared/model/prefs/browser_prefs.mm
 +++ b/ios/chrome/browser/shared/model/prefs/browser_prefs.mm
-@@ -427,6 +427,7 @@ void RegisterLocalStatePrefs(PrefRegistrySimple* registry) {
+@@ -430,6 +430,7 @@ void RegisterLocalStatePrefs(PrefRegistrySimple* registry) {
    registry->RegisterIntegerPref(kAppStoreRatingTotalDaysOnChromeKey, 0);
    registry->RegisterListPref(kAppStoreRatingActiveDaysInPastWeekKey);
    registry->RegisterTimePref(kAppStoreRatingLastShownPromoDayKey, base::Time());
@@ -10,7 +10,7 @@ index 1302fdfadd00f95ff1664fa112ba3b206b489d51..6ea334dbb54c4f4efbc14ea391171bc6
  }
  
  void RegisterBrowserStatePrefs(user_prefs::PrefRegistrySyncable* registry) {
-@@ -653,6 +654,7 @@ void RegisterBrowserStatePrefs(user_prefs::PrefRegistrySyncable* registry) {
+@@ -656,6 +657,7 @@ void RegisterBrowserStatePrefs(user_prefs::PrefRegistrySyncable* registry) {
    registry->RegisterListPref(kActivityBucketLastReportedDateArrayKey);
  
    registry->RegisterBooleanPref(kSyncRequested, false);
@@ -18,11 +18,11 @@ index 1302fdfadd00f95ff1664fa112ba3b206b489d51..6ea334dbb54c4f4efbc14ea391171bc6
  }
  
  // This method should be periodically pruned of year+ old migrations.
-@@ -826,6 +828,7 @@ void MigrateObsoleteBrowserStatePrefs(PrefService* prefs) {
-   // Added 10/2023.
-   MigrateArrayOfDatesPreferenceFromUserDefaults(
-       kActivityBucketLastReportedDateArrayKey, prefs, defaults);
+@@ -833,6 +835,7 @@ void MigrateObsoleteBrowserStatePrefs(PrefService* prefs) {
+   // Added 10/2023, but DO NOT REMOVE after the usual year!
+   // TODO(crbug.com/1486420): Remove ~one year after full launch.
+   browser_sync::MaybeMigrateSyncingUserToSignedIn(prefs);
 +  BRAVE_MIGRATE_OBSOLETE_BROWSER_STATE_PREFS
  }
  
- void MigrateObsoleteUserDefault(void) {
+ void MigrateObsoleteUserDefault() {

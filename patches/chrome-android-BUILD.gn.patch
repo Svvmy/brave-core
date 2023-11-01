@@ -18,7 +18,7 @@ index 1dca15a7f98877156c79074290f0d979b95fc322..c85cf8b515f163f51855f7fa7f20600a
    }
  
    android_library("app_hooks_java") {
-@@ -665,6 +667,7 @@ if (current_toolchain == default_toolchain) {
+@@ -663,6 +665,7 @@ if (current_toolchain == default_toolchain) {
      ]
  
      deps += feed_deps
@@ -26,15 +26,15 @@ index 1dca15a7f98877156c79074290f0d979b95fc322..c85cf8b515f163f51855f7fa7f20600a
  
      srcjar_deps = [
        ":chrome_android_java_enums_srcjar",
-@@ -683,6 +686,7 @@ if (current_toolchain == default_toolchain) {
-       "//components/supervised_user/core/browser:supervised_user_url_filter_enum_javagen",
+@@ -681,6 +684,7 @@ if (current_toolchain == default_toolchain) {
+       "//components/supervised_user/core/common:supervised_user_utils_enum_javagen",
        "//net:effective_connection_type_java",
      ]
 +    srcjar_deps += brave_chrome_java_srcjar_deps
  
      # From java_sources.gni.
      sources = chrome_java_sources + [ app_hooks_impl ]
-@@ -824,6 +828,7 @@ if (current_toolchain == default_toolchain) {
+@@ -822,6 +826,7 @@ if (current_toolchain == default_toolchain) {
        "//components/messages/android/internal:java",
        "//components/segmentation_platform/internal:internal_java",
      ]
@@ -42,7 +42,7 @@ index 1dca15a7f98877156c79074290f0d979b95fc322..c85cf8b515f163f51855f7fa7f20600a
    }
  
    action_with_pydeps("chrome_android_java_google_api_keys_srcjar") {
-@@ -2170,6 +2175,7 @@ if (current_toolchain == default_toolchain) {
+@@ -2174,6 +2179,7 @@ if (current_toolchain == default_toolchain) {
        "java/res_chromium_base/mipmap-xxxhdpi/layered_app_icon_background.png",
        "java/res_chromium_base/values/channel_constants.xml",
      ]
@@ -50,7 +50,7 @@ index 1dca15a7f98877156c79074290f0d979b95fc322..c85cf8b515f163f51855f7fa7f20600a
  
      # Dep needed to ensure override works properly.
      deps = [ ":chrome_base_module_resources" ]
-@@ -2382,6 +2388,7 @@ if (current_toolchain == default_toolchain) {
+@@ -2386,6 +2392,7 @@ if (current_toolchain == default_toolchain) {
          ":${_variant}_locale_pak_assets",
          ":${_variant}_paks",
        ]
@@ -58,7 +58,7 @@ index 1dca15a7f98877156c79074290f0d979b95fc322..c85cf8b515f163f51855f7fa7f20600a
        if (_is_monochrome) {
          deps += [ "//android_webview:locale_pak_assets" ]
        }
-@@ -2646,6 +2653,7 @@ if (current_toolchain == default_toolchain) {
+@@ -2650,6 +2657,7 @@ if (current_toolchain == default_toolchain) {
        "//components/payments/content/android:service_java",
        "//third_party/androidx:androidx_browser_browser_java",
      ]
