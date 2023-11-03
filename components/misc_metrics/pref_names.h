@@ -25,6 +25,8 @@ extern const char kMiscMetricsSearchBraveQueryCount[];
 extern const char kMiscMetricsTotalDnsRequestStorage[];
 extern const char kMiscMetricsUpgradedDnsRequestStorage[];
 
+extern const char kMiscMetricsTranslationPageCount[];
+
 extern const char kDailyUptimesListPrefName[];  // DEPRECATED
 extern const char kDailyUptimeSumPrefName[];
 extern const char kDailyUptimeFrameStartTimePrefName[];

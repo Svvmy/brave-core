@@ -29,6 +29,7 @@ class VerticalTabMetrics;
 class PrivacyHubMetrics;
 #endif
 class DohMetrics;
+class TranslateMetrics;
 class UptimeMonitor;
 
 class ProcessMiscMetrics {
@@ -51,6 +52,7 @@ class ProcessMiscMetrics {
 #if BUILDFLAG(ENABLE_AI_CHAT)
   ai_chat::AIChatMetrics* ai_chat_metrics();
 #endif
+  TranslateMetrics* translate_metrics();
 
  private:
 #if !BUILDFLAG(IS_ANDROID)
@@ -64,6 +66,7 @@ class ProcessMiscMetrics {
 #endif
   std::unique_ptr<DohMetrics> doh_metrics_;
   std::unique_ptr<UptimeMonitor> uptime_monitor_;
+  std::unique_ptr<TranslateMetrics> translate_metrics_;
 };
 
 }  // namespace misc_metrics

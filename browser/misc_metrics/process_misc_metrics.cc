@@ -10,6 +10,7 @@
 #include "components/prefs/pref_service.h"
 
 #include "brave/browser/misc_metrics/doh_metrics.h"
+#include "brave/components/misc_metrics/translate_metrics.h"
 #if !BUILDFLAG(IS_ANDROID)
 #include "brave/browser/misc_metrics/vertical_tab_metrics.h"
 #include "brave/components/misc_metrics/menu_metrics.h"
@@ -35,6 +36,8 @@ ProcessMiscMetrics::ProcessMiscMetrics(PrefService* local_state) {
 #endif
   doh_metrics_ = std::make_unique<misc_metrics::DohMetrics>(local_state);
   uptime_monitor_ = std::make_unique<misc_metrics::UptimeMonitor>(local_state);
+  translate_metrics_ =
+      std::make_unique<misc_metrics::TranslateMetrics>(local_state);
 }
 
 ProcessMiscMetrics::~ProcessMiscMetrics() = default;
@@ -57,6 +60,10 @@ UptimeMonitor* ProcessMiscMetrics::uptime_monitor() {
 }
 #endif
 
+TranslateMetrics* ProcessMiscMetrics::translate_metrics() {
+  return translate_metrics_.get();
+}
+
 #if BUILDFLAG(ENABLE_AI_CHAT)
 ai_chat::AIChatMetrics* ProcessMiscMetrics::ai_chat_metrics() {
   return ai_chat_metrics_.get();
@@ -75,6 +82,7 @@ void ProcessMiscMetrics::RegisterPrefs(PrefRegistrySimple* registry) {
 #endif
   DohMetrics::RegisterPrefs(registry);
   UptimeMonitor::RegisterPrefs(registry);
+  TranslateMetrics::RegisterPrefs(registry);
 }
 
 }  // namespace misc_metrics
