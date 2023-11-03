@@ -5,47 +5,31 @@
 
 package org.chromium.chrome.browser.playlist;
 
-import static java.lang.Math.min;
-
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.brave.playlist.PlaylistViewModel;
-import com.brave.playlist.enums.PlaylistItemEventEnum;
 import com.brave.playlist.enums.PlaylistOptionsEnum;
 import com.brave.playlist.fragment.AllPlaylistFragment;
 import com.brave.playlist.fragment.PlaylistFragment;
 import com.brave.playlist.listener.PlaylistOptionsListener;
 import com.brave.playlist.model.DownloadProgressModel;
 import com.brave.playlist.model.MoveOrCopyModel;
-import com.brave.playlist.model.PlaylistItemEventModel;
 import com.brave.playlist.model.PlaylistItemModel;
 import com.brave.playlist.model.PlaylistModel;
 import com.brave.playlist.model.PlaylistOptionsModel;
 import com.brave.playlist.util.ConstantUtils;
-import com.brave.playlist.util.HLSParsingUtil;
 import com.brave.playlist.util.PlaylistUtils;
 import com.brave.playlist.view.bottomsheet.MoveOrCopyToPlaylistBottomSheet;
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.net.HttpHeaders;
 
 import org.chromium.base.BraveFeatureList;
-import org.chromium.base.Log;
-import org.chromium.base.task.PostTask;
-import org.chromium.base.task.TaskTraits;
 import org.chromium.chrome.R;
 import org.chromium.chrome.browser.flags.ChromeFeatureList;
 import org.chromium.chrome.browser.init.AsyncInitializationActivity;
 import org.chromium.chrome.browser.playlist.PlaylistServiceObserverImpl.PlaylistServiceObserverImplDelegate;
-import org.chromium.chrome.browser.playlist.PlaylistStreamingObserverImpl.PlaylistStreamingObserverImplDelegate;
-import org.chromium.chrome.browser.playlist.download.DownloadService;
 import org.chromium.chrome.browser.playlist.settings.BravePlaylistPreferences;
 import org.chromium.chrome.browser.preferences.SharedPreferencesManager;
 import org.chromium.chrome.browser.util.TabUtils;
@@ -55,20 +39,9 @@ import org.chromium.playlist.mojom.Playlist;
 import org.chromium.playlist.mojom.PlaylistEvent;
 import org.chromium.playlist.mojom.PlaylistItem;
 import org.chromium.playlist.mojom.PlaylistService;
-import org.chromium.playlist.mojom.PlaylistStreamingObserver;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Queue;
 
 public class PlaylistHostActivity extends AsyncInitializationActivity
         implements ConnectionErrorHandler, PlaylistOptionsListener,

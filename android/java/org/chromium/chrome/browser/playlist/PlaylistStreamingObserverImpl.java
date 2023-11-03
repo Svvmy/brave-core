@@ -5,7 +5,6 @@
 
 package org.chromium.chrome.browser.playlist;
 
-import org.chromium.base.Log;
 import org.chromium.mojo.system.MojoException;
 import org.chromium.playlist.mojom.PlaylistStreamingObserver;
 
