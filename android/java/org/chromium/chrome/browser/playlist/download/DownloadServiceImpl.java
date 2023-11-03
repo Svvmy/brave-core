@@ -238,11 +238,12 @@ public class DownloadServiceImpl extends DownloadService.Impl implements Connect
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(mContext, BraveActivity.CHANNEL_ID);
-        notificationBuilder.setSmallIcon(R.drawable.ic_vpn)
+        notificationBuilder.setSmallIcon(R.drawable.ic_open_playlist)
                 .setAutoCancel(false)
-                .setContentTitle("Playlist download")
-                .setContentText(notificationText)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationText))
+                .setContentTitle(notificationText)
+                .setContentText(mContext.getResources().getString(R.string.playlist_preparing_text))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(
+                        mContext.getResources().getString(R.string.playlist_preparing_text)))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 // .addAction(R.drawable.ic_add_media_to_playlist,
                 //         mContext.getResources().getString(R.string.cancel),
