@@ -26,17 +26,17 @@ class BraveFontWhitelistTest : public testing::Test {
 
 TEST(BraveFontWhitelistTest, Platforms) {
 #if BUILDFLAG(IS_MAC)
-  EXPECT_EQ(brave::CanRestrictFontsForTesting(), true);
   EXPECT_EQ(brave::GetFontWhitelistSizeForTesting(), 286UL);
 #elif BUILDFLAG(IS_WIN)
-  EXPECT_EQ(brave::CanRestrictFontsForTesting(), true);
   EXPECT_EQ(brave::GetFontWhitelistSizeForTesting(), 313UL);
 #elif BUILDFLAG(IS_ANDROID)
-  EXPECT_EQ(brave::CanRestrictFontsForTesting(), true);
   EXPECT_EQ(brave::GetFontWhitelistSizeForTesting(), 40UL);
 #else
-  EXPECT_EQ(brave::CanRestrictFontsForTesting(), false);
-  EXPECT_EQ(brave::GetFontWhitelistSizeForTesting(), 0UL);
+  if (GetLinuxDistro().starts_with("Ubuntu 22.04")) {
+    EXPECT_EQ(brave::GetFontWhitelistSizeForTesting(), 171UL);
+  } else {
+    EXPECT_EQ(brave::GetFontWhitelistSizeForTesting(), 0UL);
+  }
 #endif
 }
 
