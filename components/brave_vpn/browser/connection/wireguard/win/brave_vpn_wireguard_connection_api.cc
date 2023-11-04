@@ -13,6 +13,14 @@
 #include "brave/components/brave_vpn/common/wireguard/win/service_details.h"
 #include "brave/components/brave_vpn/common/wireguard/win/wireguard_utils_win.h"
 
+// TODO(bsclifton): clean this up
+#include <windows.h>
+#include <wrl/client.h>
+#include "base/win/com_init_util.h"
+#include "chrome/elevation_service/elevation_service_idl.h"
+#include "chrome/install_static/install_modes.h"
+#include "chrome/install_static/install_util.h"
+
 namespace brave_vpn {
 
 namespace {
@@ -65,6 +73,35 @@ void BraveVPNWireguardConnectionAPI::InstallSystemServices() {
   //  if (install_in_progress_) {
   //    return;
   //  }
+  base::win::AssertComInitialized();
+
+
+  // TODO(bsclifton): proper logging and error handling
+  Microsoft::WRL::ComPtr<IElevator> elevator;
+  HRESULT hr = CoCreateInstance(
+      install_static::GetElevatorClsid(), nullptr, CLSCTX_LOCAL_SERVER,
+      install_static::GetElevatorIid(), IID_PPV_ARGS_Helper(&elevator));
+  if (FAILED(hr)) {
+    LOG(ERROR) << "CoCreateInstance returned: 0x" << std::hex << hr;
+    return;
+  }
+
+  hr = CoSetProxyBlanket(
+      elevator.Get(), RPC_C_AUTHN_DEFAULT, RPC_C_AUTHZ_DEFAULT,
+      COLE_DEFAULT_PRINCIPAL, RPC_C_AUTHN_LEVEL_PKT_PRIVACY,
+      RPC_C_IMP_LEVEL_IMPERSONATE, nullptr, EOAC_DYNAMIC_CLOAKING);
+  if (FAILED(hr)) {
+    LOG(ERROR) << "CoSetProxyBlanket returned: 0x" << std::hex << hr;
+    return;
+  }
+
+  hr = elevator->InstallVPNServices();
+  if (FAILED(hr)) {
+    LOG(ERROR) << "InstallVPNServices returned: 0x" << std::hex << hr;
+    return;
+  }
+
+  LOG(ERROR) << "InstallVPNServices: SUCCESS";
 }
 
 void BraveVPNWireguardConnectionAPI::PlatformConnectImpl(
