@@ -19,7 +19,7 @@ constexpr wchar_t kBraveVpnWireguardCounterOfTunnelUsage[] =
 constexpr char kBraveVpnWireguardServiceInstallSwitchName[] = "install";
 
 // Remove config and all stuff related to service.
-constexpr char kBraveVpnWireguardServiceUnnstallSwitchName[] = "uninstall";
+constexpr char kBraveVpnWireguardServiceUninstallSwitchName[] = "uninstall";
 
 // Load wireguard binaries and connect to vpn using passed config.
 constexpr char kBraveVpnWireguardServiceConnectSwitchName[] = "connect";
