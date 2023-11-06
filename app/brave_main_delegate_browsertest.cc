@@ -181,9 +181,6 @@ IN_PROC_BROWSER_TEST_F(BraveMainDelegateBrowserTest, DisabledFeatures) {
     &features::kBookmarkTriggerForPrerender2,
     &features::kChromeLabs,
     &features::kChromeRefresh2023,
-#if !BUILDFLAG(IS_ANDROID)
-    &features::kCopyLinkToText,
-#endif
     &features::kDigitalGoodsApi,
     &features::kDIPS,
     &features::kExtensionsMenuInAppMenu,
