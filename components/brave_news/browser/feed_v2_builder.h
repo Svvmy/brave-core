@@ -49,6 +49,7 @@ class FeedV2Builder {
 
   void AddListener(mojo::PendingRemote<mojom::FeedListener> listener);
 
+  void BuildFollowingFeed(BuildFeedCallback callback);
   void BuildChannelFeed(const std::string& channel, BuildFeedCallback callback);
   void BuildPublisherFeed(const std::string& publisher_id,
                           BuildFeedCallback callback);

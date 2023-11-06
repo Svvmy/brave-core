@@ -603,6 +603,44 @@ void FeedV2Builder::AddListener(
   listeners_.Add(std::move(listener));
 }
 
+void FeedV2Builder::BuildFollowingFeed(BuildFeedCallback callback) {
+  GenerateFeed(
+      {.signals = true},
+      mojom::FeedV2Type::NewFollowing(mojom::FeedV2FollowingType::New()),
+      base::BindOnce(
+          [](FeedV2Builder* builder) {
+            const auto& publishers =
+                builder->publishers_controller_->GetLastPublishers();
+            auto feed = mojom::FeedV2::New();
+            ArticleInfos allowed_articles;
+            {
+              auto articles = GetArticleInfos(
+                  builder->publishers_controller_->GetLastLocale(),
+                  builder->raw_feed_items_, publishers, builder->signals_);
+              std::copy_if(std::make_move_iterator(articles.begin()),
+                           std::make_move_iterator(articles.end()),
+                           std::back_inserter(allowed_articles),
+                           [](const auto& item) {
+                             return std::get<1>(item).subscribed;
+                           });
+            }
+
+            // Generate blocks.
+            while (!allowed_articles.empty()) {
+              auto block = GenerateBlock(allowed_articles);
+              if (block.empty()) {
+                break;
+              }
+
+              base::ranges::move(block, std::back_inserter(feed->items));
+            }
+
+            return feed;
+          },
+          base::Unretained(this)),
+      std::move(callback));
+}
+
 void FeedV2Builder::BuildChannelFeed(const std::string& channel,
                                      BuildFeedCallback callback) {
   GenerateFeed(
