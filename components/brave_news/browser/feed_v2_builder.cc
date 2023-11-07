@@ -617,13 +617,13 @@ void FeedV2Builder::BuildFollowingFeed(BuildFeedCallback callback) {
                 builder->publishers_controller_->GetLastLocale(),
                 builder->raw_feed_items_, publishers, builder->signals_);
 
-            auto blocks_per_ad = 2;
+            constexpr size_t kBlocksPerAd = 2;
             size_t iteration = 0;
 
             // Generate blocks.
             while (!articles.empty()) {
               std::vector<mojom::FeedItemV2Ptr> items;
-              if (iteration % (blocks_per_ad + 1) != blocks_per_ad) {
+              if (iteration % (kBlocksPerAd + 1) != kBlocksPerAd) {
                 items = GenerateBlock(articles,
                                       /*inline_discovery_ratio=*/0);
                 if (items.empty()) {
