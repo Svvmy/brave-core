@@ -612,6 +612,9 @@ void FeedV2Builder::BuildFollowingFeed(BuildFeedCallback callback) {
             const auto& publishers =
                 builder->publishers_controller_->GetLastPublishers();
             auto feed = mojom::FeedV2::New();
+
+            // Only allow articles where the item is subscribed (either via a
+            // channel or a publisher).
             ArticleInfos allowed_articles;
             {
               auto articles = GetArticleInfos(
@@ -625,14 +628,23 @@ void FeedV2Builder::BuildFollowingFeed(BuildFeedCallback callback) {
                            });
             }
 
+            auto blocks_per_ad = 2;
+            size_t iteration = 0;
+
             // Generate blocks.
             while (!allowed_articles.empty()) {
-              auto block = GenerateBlock(allowed_articles);
-              if (block.empty()) {
-                break;
+              std::vector<mojom::FeedItemV2Ptr> items;
+              if (iteration % (blocks_per_ad + 1) != blocks_per_ad) {
+                items = GenerateBlock(allowed_articles);
+                if (items.empty()) {
+                  break;
+                }
+              } else {
+                items = GenerateAd();
               }
 
-              base::ranges::move(block, std::back_inserter(feed->items));
+              base::ranges::move(items, std::back_inserter(feed->items));
+              iteration++;
             }
 
             return feed;
