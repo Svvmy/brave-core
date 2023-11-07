@@ -243,4 +243,7 @@
     <color name="rewards_tipping_progress_bar">@android:color/white</color>
 
     <color name="leo_reset_text_color">#FF4B6A</color>
+
+    <!-- Anti adblock dialog colors -->
+    <color name="anti_adblock_dialog_bg_color">#0D0F14</color>
 </resources>
