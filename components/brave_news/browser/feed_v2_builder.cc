@@ -312,7 +312,14 @@ mojom::FeedItemMetadataPtr PickDiscoveryArticleAndRemove(
 // Generates a standard block:
 // 1. Hero Article
 // 2. 1 - 5 Inline Articles (a percentage of which might be discover cards).
-std::vector<mojom::FeedItemV2Ptr> GenerateBlock(ArticleInfos& articles) {
+std::vector<mojom::FeedItemV2Ptr> GenerateBlock(
+    ArticleInfos& articles,
+    // Ratio of inline articles to discovery articles.
+    // discover ratio % of the time, we should do a discover card here instead
+    // of a roulette card.
+    // https://docs.google.com/document/d/1bSVHunwmcHwyQTpa3ab4KRbGbgNQ3ym_GHvONnrBypg/edit#heading=h.4rkb0vecgekl
+    double inline_discovery_ratio =
+        features::kBraveNewsInlineDiscoveryRatio.Get()) {
   DVLOG(1) << __FUNCTION__;
   std::vector<mojom::FeedItemV2Ptr> result;
   if (articles.empty()) {
@@ -331,12 +338,6 @@ std::vector<mojom::FeedItemV2Ptr> GenerateBlock(ArticleInfos& articles) {
   const int block_max_inline = features::kBraveNewsMaxBlockCards.Get();
   auto follow_count = GetNormal(block_min_inline, block_max_inline + 1);
   for (auto i = 0; i < follow_count; ++i) {
-    // Ratio of inline articles to discovery articles.
-    // discover ratio % of the time, we should do a discover card here instead
-    // of a roulette card.
-    // https://docs.google.com/document/d/1bSVHunwmcHwyQTpa3ab4KRbGbgNQ3ym_GHvONnrBypg/edit#heading=h.4rkb0vecgekl
-    const double inline_discovery_ratio =
-        features::kBraveNewsInlineDiscoveryRatio.Get();
     bool is_discover = base::RandDouble() < inline_discovery_ratio;
     auto generated = is_discover ? PickDiscoveryArticleAndRemove(articles)
                                  : PickRouletteAndRemove(articles);
@@ -393,7 +394,7 @@ std::vector<mojom::FeedItemV2Ptr> GenerateChannelBlock(
     --i;
   }
 
-  auto block = GenerateBlock(allowed_articles);
+  auto block = GenerateBlock(allowed_articles, /*inline_discovery_ratio=*/0);
 
   // Put the unused articles back in the original list.
   base::ranges::move(allowed_articles, std::back_inserter(articles));
@@ -612,30 +613,19 @@ void FeedV2Builder::BuildFollowingFeed(BuildFeedCallback callback) {
             const auto& publishers =
                 builder->publishers_controller_->GetLastPublishers();
             auto feed = mojom::FeedV2::New();
-
-            // Only allow articles where the item is subscribed (either via a
-            // channel or a publisher).
-            ArticleInfos allowed_articles;
-            {
-              auto articles = GetArticleInfos(
-                  builder->publishers_controller_->GetLastLocale(),
-                  builder->raw_feed_items_, publishers, builder->signals_);
-              std::copy_if(std::make_move_iterator(articles.begin()),
-                           std::make_move_iterator(articles.end()),
-                           std::back_inserter(allowed_articles),
-                           [](const auto& item) {
-                             return std::get<1>(item).subscribed;
-                           });
-            }
+            auto articles = GetArticleInfos(
+                builder->publishers_controller_->GetLastLocale(),
+                builder->raw_feed_items_, publishers, builder->signals_);
 
             auto blocks_per_ad = 2;
             size_t iteration = 0;
 
             // Generate blocks.
-            while (!allowed_articles.empty()) {
+            while (!articles.empty()) {
               std::vector<mojom::FeedItemV2Ptr> items;
               if (iteration % (blocks_per_ad + 1) != blocks_per_ad) {
-                items = GenerateBlock(allowed_articles);
+                items = GenerateBlock(articles,
+                                      /*inline_discovery_ratio=*/0);
                 if (items.empty()) {
                   break;
                 }
