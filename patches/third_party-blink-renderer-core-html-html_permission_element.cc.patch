@@ -1,0 +1,12 @@
+diff --git a/third_party/blink/renderer/core/html/html_permission_element.cc b/third_party/blink/renderer/core/html/html_permission_element.cc
+index d40696e5951cf302b003de7f3f219f66c8dc4801..66485077702ca918ec902910547f478fb3c134b2 100644
+--- a/third_party/blink/renderer/core/html/html_permission_element.cc
++++ b/third_party/blink/renderer/core/html/html_permission_element.cc
+@@ -34,7 +34,6 @@ using mojom::blink::PermissionDescriptorPtr;
+ using mojom::blink::PermissionName;
+ using mojom::blink::PermissionObserver;
+ using mojom::blink::PermissionService;
+-using mojom::blink::PermissionStatus;
+ 
+ namespace {
+ 
