@@ -101,7 +101,7 @@ export default function Advert(props: Props) {
   })
 
   // Advert is null if we didn't manage to load an advertisement
-  if (advert === null) return <div>Advert</div>
+  if (advert === null) return null
 
   // Otherwise, render a placeholder div - when close to the viewport we'll
   // request an ad.

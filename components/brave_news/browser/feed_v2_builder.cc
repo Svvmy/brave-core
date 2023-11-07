@@ -655,6 +655,7 @@ void FeedV2Builder::BuildChannelFeed(const std::string& channel,
                 builder->publishers_controller_->GetLastPublishers();
             auto& locale = builder->publishers_controller_->GetLastLocale();
 
+            FeedItems feed_items;
             for (const auto& item : builder->raw_feed_items_) {
               if (!item->is_article()) {
                 continue;
@@ -679,14 +680,27 @@ void FeedV2Builder::BuildChannelFeed(const std::string& channel,
                 continue;
               }
 
-              result->items.push_back(
-                  mojom::FeedItemV2::NewArticle(item->get_article()->Clone()));
+              feed_items.push_back(item->Clone());
             }
 
-            base::ranges::sort(result->items, [](const auto& a, const auto& b) {
-              return GetPopRecency(b->get_article()->data) <
-                     GetPopRecency(a->get_article()->data);
-            });
+            auto articles = GetArticleInfos(locale, feed_items, publishers,
+                                            builder->signals_);
+
+            constexpr size_t kBlocksPerAd = 2;
+            size_t iteration = 0;
+            while (!articles.empty()) {
+              std::vector<mojom::FeedItemV2Ptr> items;
+              if (iteration % (kBlocksPerAd + 1) != kBlocksPerAd) {
+                items = GenerateBlock(articles, /*inline_discovery_ratio=*/0);
+                if (items.empty()) {
+                  break;
+                }
+              } else {
+                items = GenerateAd();
+              }
+              base::ranges::move(items, std::back_inserter(result->items));
+              iteration++;
+            }
 
             return result;
           },
