@@ -126,6 +126,7 @@ class FeedV2Builder {
                     base::OnceCallback<mojom::FeedV2Ptr()> build_feed,
                     BuildFeedCallback callback);
 
+  mojom::FeedV2Ptr GenerateBasicFeed(const FeedItems& items);
   mojom::FeedV2Ptr GenerateAllFeed();
 
   raw_ref<PublishersController> publishers_controller_;

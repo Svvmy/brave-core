@@ -628,26 +628,7 @@ void FeedV2Builder::BuildFollowingFeed(BuildFeedCallback callback) {
       mojom::FeedV2Type::NewFollowing(mojom::FeedV2FollowingType::New()),
       base::BindOnce(
           [](FeedV2Builder* builder) {
-            const auto& publishers =
-                builder->publishers_controller_->GetLastPublishers();
-            auto feed = mojom::FeedV2::New();
-            auto articles = GetArticleInfos(
-                builder->publishers_controller_->GetLastLocale(),
-                builder->raw_feed_items_, publishers, builder->signals_);
-
-            size_t iteration = 0;
-            while (!articles.empty()) {
-              auto items = GenerateBlock(articles,
-                                         /*inline_discovery_ratio=*/0);
-              if (items.empty()) {
-                break;
-              }
-
-              base::ranges::move(items, std::back_inserter(feed->items));
-              MaybeInsertAds(feed, iteration++);
-            }
-
-            return feed;
+            return builder->GenerateBasicFeed(builder->raw_feed_items_);
           },
           base::Unretained(this)),
       std::move(callback));
@@ -660,7 +641,6 @@ void FeedV2Builder::BuildChannelFeed(const std::string& channel,
       mojom::FeedV2Type::NewChannel(mojom::FeedV2ChannelType::New(channel)),
       base::BindOnce(
           [](FeedV2Builder* builder, const std::string& channel) {
-            auto result = mojom::FeedV2::New();
             auto& publishers =
                 builder->publishers_controller_->GetLastPublishers();
             auto& locale = builder->publishers_controller_->GetLastLocale();
@@ -693,23 +673,7 @@ void FeedV2Builder::BuildChannelFeed(const std::string& channel,
               feed_items.push_back(item->Clone());
             }
 
-            auto articles = GetArticleInfos(locale, feed_items, publishers,
-                                            builder->signals_);
-
-            size_t iteration = 0;
-            while (!articles.empty()) {
-              auto items =
-                  GenerateBlock(articles, /*inline_discovery_ratio=*/0);
-              if (items.empty()) {
-                break;
-              }
-
-              base::ranges::move(items, std::back_inserter(result->items));
-              MaybeInsertAds(result, iteration++);
-              iteration++;
-            }
-
-            return result;
+            return builder->GenerateBasicFeed(feed_items);
           },
           base::Unretained(this), channel),
       std::move(callback));
@@ -736,25 +700,7 @@ void FeedV2Builder::BuildPublisherFeed(const std::string& publisher_id,
               items.push_back(item->Clone());
             }
 
-            auto articles = GetArticleInfos(
-                builder->publishers_controller_->GetLastLocale(), items,
-                builder->publishers_controller_->GetLastPublishers(),
-                builder->signals_);
-
-            auto result = mojom::FeedV2::New();
-            size_t iteration = 0;
-            while (!items.empty()) {
-              auto block =
-                  GenerateBlock(articles, /*inline_discovery_ratio=*/0);
-              if (block.empty()) {
-                break;
-              }
-
-              std::ranges::move(block, std::back_inserter(result->items));
-              MaybeInsertAds(result, iteration++);
-            }
-
-            return result;
+            return builder->GenerateBasicFeed(items);
           },
           base::Unretained(this), publisher_id),
       std::move(callback));
@@ -973,6 +919,26 @@ void FeedV2Builder::GenerateFeed(
           },
           weak_ptr_factory_.GetWeakPtr(), std::move(type),
           std::move(build_feed), std::move(callback)));
+}
+
+mojom::FeedV2Ptr FeedV2Builder::GenerateBasicFeed(const FeedItems& feed_items) {
+  DVLOG(1) << __FUNCTION__;
+
+  auto articles =
+      GetArticleInfos(publishers_controller_->GetLastLocale(), feed_items,
+                      publishers_controller_->GetLastPublishers(), signals_);
+
+  auto feed = mojom::FeedV2::New();
+  size_t iteration = 0;
+  while (!articles.empty()) {
+    std::vector<mojom::FeedItemV2Ptr> items;
+    if (iteration == 0) {
+      items = GenerateBlock(articles, /*inline_discovery_ratio=*/0);
+    }
+
+    MaybeInsertAds(feed, iteration++);
+  }
+  return feed;
 }
 
 mojom::FeedV2Ptr FeedV2Builder::GenerateAllFeed() {
