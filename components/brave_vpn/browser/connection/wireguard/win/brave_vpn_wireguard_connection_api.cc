@@ -5,18 +5,17 @@
 
 #include "brave/components/brave_vpn/browser/connection/wireguard/win/brave_vpn_wireguard_connection_api.h"
 
+// TODO(bsclifton): clean this up
+#include <windows.h>
+#include <wrl/client.h>
 #include <memory>
 #include <tuple>
 
+#include "base/win/com_init_util.h"
 #include "brave/components/brave_vpn/browser/connection/wireguard/brave_vpn_wireguard_connection_api_base.h"
 #include "brave/components/brave_vpn/common/win/utils.h"
 #include "brave/components/brave_vpn/common/wireguard/win/service_details.h"
 #include "brave/components/brave_vpn/common/wireguard/win/wireguard_utils_win.h"
-
-// TODO(bsclifton): clean this up
-#include <windows.h>
-#include <wrl/client.h>
-#include "base/win/com_init_util.h"
 #include "chrome/elevation_service/elevation_service_idl.h"
 #include "chrome/install_static/install_modes.h"
 #include "chrome/install_static/install_util.h"
