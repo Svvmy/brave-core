@@ -26,7 +26,7 @@ namespace brave_ads::test {
 
 AdEventInfo BuildAdEvent(const CreativeAdInfo& creative_ad,
                          const AdType ad_type,
-                         const ConfirmationType& confirmation_type,
+                         const ConfirmationType confirmation_type,
                          const base::Time created_at,
                          const bool should_use_random_uuids) {
   AdEventInfo ad_event;
@@ -48,18 +48,18 @@ AdEventInfo BuildAdEvent(const CreativeAdInfo& creative_ad,
 }
 
 void RecordAdEvent(const AdType type,
-                   const ConfirmationType& confirmation_type) {
+                   const ConfirmationType confirmation_type) {
   RecordAdEvents(type, confirmation_type, /*count=*/1);
 }
 
 void RecordAdEvents(const AdType type,
-                    const ConfirmationType& confirmation_type,
+                    const ConfirmationType confirmation_type,
                     const int count) {
   CHECK_GT(count, 0);
 
   const std::string& id = GetInstanceId();
   const std::string ad_type_as_string = ToString(type);
-  const std::string confirmation_type_as_string = confirmation_type.ToString();
+  const std::string confirmation_type_as_string = ToString(confirmation_type);
 
   for (int i = 0; i < count; ++i) {
     CacheAdEventForInstanceId(id, ad_type_as_string,

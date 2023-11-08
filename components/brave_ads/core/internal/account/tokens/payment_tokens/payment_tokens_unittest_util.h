@@ -18,7 +18,7 @@ namespace test {
 PaymentTokens& GetPaymentTokens();
 PaymentTokenList SetPaymentTokens(int count);
 
-PaymentTokenInfo BuildPaymentToken(const ConfirmationType& confirmation_type,
+PaymentTokenInfo BuildPaymentToken(const ConfirmationType confirmation_type,
                                    const AdType ad_type);
 PaymentTokenInfo BuildPaymentToken();
 PaymentTokenList BuildPaymentTokens(int count);

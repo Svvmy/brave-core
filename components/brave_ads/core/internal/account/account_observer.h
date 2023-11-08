@@ -9,11 +9,11 @@
 #include <string>
 
 #include "base/observer_list_types.h"
+#include "brave/components/brave_ads/core/public/account/confirmations/confirmation_type.h"
 #include "brave/components/brave_ads/core/public/units/ad_type.h"
 
 namespace brave_ads {
 
-class ConfirmationType;
 struct TransactionInfo;
 struct WalletInfo;
 
@@ -33,7 +33,7 @@ class AccountObserver : public base::CheckedObserver {
   virtual void OnFailedToProcessDeposit(
       const std::string& creative_instance_id,
       const AdType ad_type,
-      const ConfirmationType& confirmation_type) {}
+      const ConfirmationType confirmation_type) {}
 };
 
 }  // namespace brave_ads

@@ -7,6 +7,7 @@
 
 #include "base/debug/crash_logging.h"
 #include "base/notreached.h"
+#include "base/types/cxx23_to_underlying.h"
 
 namespace brave_ads {
 
@@ -28,101 +29,67 @@ constexpr char kConversionType[] = "conversion";
 
 }  // namespace
 
-ConfirmationType::ConfirmationType() = default;
-
-ConfirmationType::ConfirmationType(const std::string& value) {
+ConfirmationType ParseConfirmationType(std::string_view value) {
   if (value == kUndefinedType) {
-    value_ = kUndefined;
+    return ConfirmationType::kUndefined;
   } else if (value == kClickedType) {
-    value_ = kClicked;
+    return ConfirmationType::kClicked;
   } else if (value == kDismissedType) {
-    value_ = kDismissed;
+    return ConfirmationType::kDismissed;
   } else if (value == kViewedType) {
-    value_ = kViewed;
+    return ConfirmationType::kViewed;
   } else if (value == kServedType) {
-    value_ = kServed;
+    return ConfirmationType::kServed;
   } else if (value == kTransferredType) {
-    value_ = kTransferred;
+    return ConfirmationType::kTransferred;
   } else if (value == kSavedType) {
-    value_ = kSaved;
+    return ConfirmationType::kSaved;
   } else if (value == kFlaggedType) {
-    value_ = kFlagged;
+    return ConfirmationType::kFlagged;
   } else if (value == kUpvotedType) {
-    value_ = kUpvoted;
+    return ConfirmationType::kUpvoted;
   } else if (value == kDownvotedType) {
-    value_ = kDownvoted;
+    return ConfirmationType::kDownvoted;
   } else if (value == kConversionType) {
-    value_ = kConversion;
-  } else {
-    SCOPED_CRASH_KEY_STRING32("ConfirmationType", "value", value);
-    NOTREACHED() << "Unexpected value for ConfirmationType: " << value;
+    return ConfirmationType::kConversion;
   }
+  SCOPED_CRASH_KEY_STRING32("ConfirmationType", "value", value);
+  NOTREACHED() << "Unexpected value for ConfirmationType: " << value;
+  return ConfirmationType::kUndefined;
 }
 
-ConfirmationType::Value ConfirmationType::value() const {
-  return value_;
-}
-
-std::string ConfirmationType::ToString() const {
-  switch (value_) {
-    case kUndefined: {
+const char* ToString(ConfirmationType type) {
+  switch (type) {
+    case ConfirmationType::kUndefined:
       return kUndefinedType;
-    }
-
-    case kClicked: {
+    case ConfirmationType::kClicked:
       return kClickedType;
-    }
-
-    case kDismissed: {
+    case ConfirmationType::kDismissed:
       return kDismissedType;
-    }
-
-    case kViewed: {
+    case ConfirmationType::kViewed:
       return kViewedType;
-    }
-
-    case kServed: {
+    case ConfirmationType::kServed:
       return kServedType;
-    }
-
-    case kTransferred: {
+    case ConfirmationType::kTransferred:
       return kTransferredType;
-    }
-
-    case kSaved: {
+    case ConfirmationType::kSaved:
       return kSavedType;
-    }
-
-    case kFlagged: {
+    case ConfirmationType::kFlagged:
       return kFlaggedType;
-    }
-
-    case kUpvoted: {
+    case ConfirmationType::kUpvoted:
       return kUpvotedType;
-    }
-
-    case kDownvoted: {
+    case ConfirmationType::kDownvoted:
       return kDownvotedType;
-    }
-
-    case kConversion: {
+    case ConfirmationType::kConversion:
       return kConversionType;
-    }
   }
 
-  NOTREACHED_NORETURN() << "Unexpected value for Value: " << value_;
+  NOTREACHED_NORETURN() << "Unexpected value for Value: "
+                        << base::to_underlying(type);
 }
 
-bool operator==(const ConfirmationType& lhs, const ConfirmationType& rhs) {
-  return lhs.value() == rhs.value();
-}
-
-bool operator!=(const ConfirmationType& lhs, const ConfirmationType& rhs) {
-  return !(lhs == rhs);
-}
-
-std::ostream& operator<<(std::ostream& os, const ConfirmationType& type) {
-  os << type.ToString();
+std::ostream& operator<<(std::ostream& os, const ConfirmationType type) {
+  os << ToString(type);
   return os;
 }
 
