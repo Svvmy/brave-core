@@ -8,6 +8,7 @@
 #include "base/check.h"
 #include "base/debug/crash_logging.h"
 #include "base/notreached.h"
+#include "base/types/cxx23_to_underlying.h"
 #include "brave/components/brave_ads/core/mojom/brave_ads.mojom-shared.h"
 
 namespace brave_ads {
@@ -25,107 +26,67 @@ constexpr char kSearchResultAdType[] = "search_result_ad";
 
 }  // namespace
 
-AdType::AdType() = default;
-
-AdType::AdType(const std::string& value) {
+AdType ParseAdType(std::string_view value) {
   if (value == kUndefinedType) {
-    value_ = kUndefined;
+    return AdType::kUndefined;
   } else if (value == kNotificationAdType) {
-    value_ = kNotificationAd;
+    return AdType::kNotificationAd;
   } else if (value == kNewTabPageAdType) {
-    value_ = kNewTabPageAd;
+    return AdType::kNewTabPageAd;
   } else if (value == kPromotedContentAdType) {
-    value_ = kPromotedContentAd;
+    return AdType::kPromotedContentAd;
   } else if (value == kInlineContentAdType) {
-    value_ = kInlineContentAd;
+    return AdType::kInlineContentAd;
   } else if (value == kSearchResultAdType) {
-    value_ = kSearchResultAd;
-  } else {
-    SCOPED_CRASH_KEY_STRING32("AdType", "value", value);
-    NOTREACHED() << "Unexpected value for AdType: " << value;
+    return AdType::kSearchResultAd;
   }
+
+  SCOPED_CRASH_KEY_STRING32("AdType", "value", value);
+  NOTREACHED() << "Unexpected value for AdType: " << value;
+  return AdType::kUndefined;
 }
 
-AdType::AdType(const mojom::AdType value) {
+AdType FromMojomTypeToAdType(const mojom::AdType value) {
   CHECK(mojom::IsKnownEnumValue(value));
 
   switch (value) {
-    case mojom::AdType::kUndefined: {
-      value_ = kUndefined;
-      break;
-    }
-
-    case mojom::AdType::kNotificationAd: {
-      value_ = kNotificationAd;
-      break;
-    }
-
-    case mojom::AdType::kNewTabPageAd: {
-      value_ = kNewTabPageAd;
-      break;
-    }
-
-    case mojom::AdType::kPromotedContentAd: {
-      value_ = kPromotedContentAd;
-      break;
-    }
-
-    case mojom::AdType::kInlineContentAd: {
-      value_ = kInlineContentAd;
-      break;
-    }
-
-    case mojom::AdType::kSearchResultAd: {
-      value_ = kSearchResultAd;
-      break;
-    }
+    case mojom::AdType::kUndefined:
+      return AdType::kUndefined;
+    case mojom::AdType::kNotificationAd:
+      return AdType::kNotificationAd;
+    case mojom::AdType::kNewTabPageAd:
+      return AdType::kNewTabPageAd;
+    case mojom::AdType::kPromotedContentAd:
+      return AdType::kPromotedContentAd;
+    case mojom::AdType::kInlineContentAd:
+      return AdType::kInlineContentAd;
+    case mojom::AdType::kSearchResultAd:
+      return AdType::kSearchResultAd;
   }
 }
 
-AdType::Value AdType::value() const {
-  return value_;
-}
-
-std::string AdType::ToString() const {
-  switch (value_) {
-    case kUndefined: {
+const char* ToString(AdType type) {
+  switch (type) {
+    case AdType::kUndefined:
       return kUndefinedType;
-    }
-
-    case kNotificationAd: {
+    case AdType::kNotificationAd:
       return kNotificationAdType;
-    }
-
-    case kNewTabPageAd: {
+    case AdType::kNewTabPageAd:
       return kNewTabPageAdType;
-    }
-
-    case kPromotedContentAd: {
+    case AdType::kPromotedContentAd:
       return kPromotedContentAdType;
-    }
-
-    case kInlineContentAd: {
+    case AdType::kInlineContentAd:
       return kInlineContentAdType;
-    }
-
-    case kSearchResultAd: {
+    case AdType::kSearchResultAd:
       return kSearchResultAdType;
-    }
   }
 
-  NOTREACHED_NORETURN() << "Unexpected value for Value: " << value_;
+  NOTREACHED_NORETURN() << "Unexpected value for Value: "
+                        << base::to_underlying(type);
 }
 
-bool operator==(const AdType& lhs, const AdType& rhs) {
-  return lhs.value() == rhs.value();
-}
-
-bool operator!=(const AdType& lhs, const AdType& rhs) {
-  return !(lhs == rhs);
-}
-
-std::ostream& operator<<(std::ostream& os, const AdType& type) {
-  os << type.ToString();
+std::ostream& operator<<(std::ostream& os, const AdType type) {
+  os << ToString(type);
   return os;
 }
 
