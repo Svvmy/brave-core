@@ -65,7 +65,7 @@ const InstallConstants kInstallModes[] = {
         .elevator_iid = {0xf396861e,
                          0x0c8e,
                          0x4c71,
-                         {0x82,0x56,0x2f,0xae,0x6d,0x75,0x9c,0xe9}},
+                         {0x82, 0x56, 0x2f, 0xae, 0x6d, 0x75, 0x9c, 0xe9}},
         .default_channel_name = L"",  // The empty string means "stable".
         .channel_strategy = ChannelStrategy::FLOATING,
         .supports_system_level = true,  // Supports system-level installs.
@@ -113,7 +113,7 @@ const InstallConstants kInstallModes[] = {
         .elevator_iid = {0x9ebad7ac,
                          0x6e1e,
                          0x4a1c,
-                         {0xaa,0x85,0x1a,0x70,0xca,0xda,0x8d,0x82}},
+                         {0xaa, 0x85, 0x1a, 0x70, 0xca, 0xda, 0x8d, 0x82}},
         .default_channel_name = L"beta",  // Forced channel name.
         .channel_strategy = ChannelStrategy::FIXED,
         .supports_system_level = true,  // Supports system-level installs.
@@ -161,7 +161,7 @@ const InstallConstants kInstallModes[] = {
         .elevator_iid = {0x1e43c77b,
                          0x48e6,
                          0x4a4c,
-                         {0x9d,0xb2,0xc2,0x97,0x17,0x06,0xc2,0x55}},
+                         {0x9d, 0xb2, 0xc2, 0x97, 0x17, 0x06, 0xc2, 0x55}},
         .default_channel_name = L"dev",  // Forced channel name.
         .channel_strategy = ChannelStrategy::FIXED,
         .supports_system_level = true,  // Supports system-level installs.
@@ -212,7 +212,7 @@ const InstallConstants kInstallModes[] = {
         .elevator_iid = {0x1db2116f,
                          0x71b7,
                          0x49f0,
-                         {0x89,0x70,0x33,0xb1,0xda,0xcf,0xb0,0x72}},
+                         {0x89, 0x70, 0x33, 0xb1, 0xda, 0xcf, 0xb0, 0x72}},
         .default_channel_name = L"nightly",  // Forced channel name.
         .channel_strategy = ChannelStrategy::FIXED,
         .supports_system_level = true,  // Support system-level installs.
@@ -267,7 +267,7 @@ const InstallConstants kInstallModes[] = {
         .elevator_iid = {0x17239bf1,
                          0xa1dc,
                          0x4642,
-                         {0x84,0x6c,0x1b,0xac,0x85,0xf9,0x6a,0x10}},
+                         {0x84, 0x6c, 0x1b, 0xac, 0x85, 0xf9, 0x6a, 0x10}},
         .default_channel_name =
             L"",  // Empty default channel name since no update integration.
         .channel_strategy = ChannelStrategy::UNSUPPORTED,
