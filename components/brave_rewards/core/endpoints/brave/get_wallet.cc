@@ -16,6 +16,7 @@
 #include "net/http/http_status_code.h"
 
 namespace brave_rewards::internal::endpoints {
+
 using Error = GetWallet::Error;
 using Result = GetWallet::Result;
 
@@ -31,7 +32,7 @@ Result ParseBody(const std::string& body) {
   auto* deposit_account_provider =
       value->GetDict().FindDict("depositAccountProvider");
   if (!deposit_account_provider) {
-    return std::pair{"" /* wallet provider */, false /* linked */};
+    return GetWallet::Value();
   }
 
   auto* name = deposit_account_provider->FindString("name");
@@ -42,10 +43,19 @@ Result ParseBody(const std::string& body) {
     return base::unexpected(Error::kFailedToParseBody);
   }
 
-  return std::pair{
-      std::move(*name),                     // wallet provider
-      !id->empty() && !linking_id->empty()  // linked
-  };
+  // TODO(zenparsing): Rename on the server-side?
+  const auto* self_custody_available =
+      value->GetDict().FindDict("showSelfCustodyInvite");
+
+  static const base::Value::Dict kEmptyDict;
+  if (!self_custody_available) {
+    self_custody_available = &kEmptyDict;
+  }
+
+  return GetWallet::Value{
+      .wallet_provider = std::move(*name),
+      .linked = !id->empty() && !linking_id->empty(),
+      .self_custody_available = self_custody_available->Clone()};
 }
 
 }  // namespace

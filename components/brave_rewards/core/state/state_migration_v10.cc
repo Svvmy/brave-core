@@ -124,8 +124,7 @@ void StateMigrationV10::OnGetWallet(LegacyResultCallback callback,
   DCHECK(!uphold_wallet->address.empty());
 
   const auto is_semi_verified = [](auto result) {
-    const auto [custodian, linked] = std::move(result);
-    return custodian != constant::kWalletUphold || !linked;
+    return result.wallet_provider != constant::kWalletUphold || !result.linked;
   };
 
   // deemed semi-VERIFIED || semi-VERIFIED

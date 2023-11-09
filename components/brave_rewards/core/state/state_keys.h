@@ -36,6 +36,7 @@ const char kParametersVBatDeadline[] = "parameters.vbat_deadline";
 const char kParametersVBatExpired[] = "parameters.vbat_expired";
 const char kEmptyBalanceChecked[] = "empty_balance_checked";
 const char kExternalWalletType[] = "external_wallet_type";
+const char kSelfCustodyAvailable[] = "self_custody_available";
 const char kWalletBrave[] = "wallets.brave";
 const char kWalletUphold[] = "wallets.uphold";
 const char kWalletBitflyer[] = "wallets.bitflyer";

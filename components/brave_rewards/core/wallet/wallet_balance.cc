@@ -31,6 +31,9 @@ std::string GetConnectedWalletType(RewardsEngineImpl& engine) {
          : GetWalletIf(engine, constant::kWalletZebPay,
                        {mojom::WalletStatus::kConnected})
              ? constant::kWalletZebPay
+         : GetWalletIf(engine, constant::kWalletSolana,
+                       {mojom::WalletStatus::kConnected})
+             ? constant::kWalletZebPay
              : "";
 }
 }  // namespace

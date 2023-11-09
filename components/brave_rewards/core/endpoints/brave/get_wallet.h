@@ -7,9 +7,9 @@
 #define BRAVE_COMPONENTS_BRAVE_REWARDS_CORE_ENDPOINTS_BRAVE_GET_WALLET_H_
 
 #include <string>
-#include <utility>
 #include <vector>
 
+#include "base/values.h"
 #include "brave/components/brave_rewards/common/mojom/rewards_core.mojom.h"
 #include "brave/components/brave_rewards/common/mojom/rewards_engine.mojom.h"
 #include "brave/components/brave_rewards/core/endpoints/request_builder.h"
@@ -46,7 +46,12 @@ class GetWallet;
 
 template <>
 struct ResultFor<GetWallet> {
-  using Value = std::pair<std::string /* wallet provider */, bool /* linked */>;
+  struct Value {
+    std::string wallet_provider;
+    bool linked = false;
+    base::Value::Dict self_custody_available;
+  };
+
   using Error = mojom::GetWalletError;
 };
 

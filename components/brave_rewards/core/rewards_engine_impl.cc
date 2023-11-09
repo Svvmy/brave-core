@@ -37,7 +37,9 @@ RewardsEngineImpl::RewardsEngineImpl(
       bitflyer_(*this),
       gemini_(*this),
       uphold_(*this),
-      zebpay_(*this) {
+      zebpay_(*this),
+      solana_provider_(*this),
+      linkage_checker_(*this) {
   DCHECK(base::ThreadPoolInstance::Get());
   set_client_for_logging(client_.get());
 }
@@ -578,6 +580,8 @@ void RewardsEngineImpl::GetExternalWallet(GetExternalWalletCallback callback) {
       wallet = uphold()->GetWallet();
     } else if (wallet_type == constant::kWalletZebPay) {
       wallet = zebpay()->GetWallet();
+    } else if (wallet_type == constant::kWalletSolana) {
+      wallet = solana_provider_.GetWallet();
     } else {
       NOTREACHED() << "Unknown external wallet type!";
     }
@@ -608,6 +612,10 @@ void RewardsEngineImpl::BeginExternalWalletLogin(
 
     if (wallet_type == constant::kWalletZebPay) {
       return zebpay()->BeginLogin(std::move(callback));
+    }
+
+    if (wallet_type == constant::kWalletSolana) {
+      return solana_provider_.BeginLogin(std::move(callback));
     }
 
     NOTREACHED() << "Unknown external wallet type!";
@@ -855,6 +863,7 @@ void RewardsEngineImpl::StartServices() {
   promotion()->Initialize();
   api()->Initialize();
   recovery_.Check();
+  linkage_checker_.Start();
 }
 
 void RewardsEngineImpl::OnAllDone(mojom::Result result,

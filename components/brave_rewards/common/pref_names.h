@@ -35,6 +35,8 @@ extern const char kExternalWallets[];  // DEPRECATED
 extern const char kBadgeText[];
 extern const char kUseRewardsStagingServer[];
 extern const char kExternalWalletType[];
+extern const char kSelfCustodyAvailable[];
+extern const char kSelfCustodyInvitationDismissed[];
 
 // Defined in core
 extern const char kServerPublisherListStamp[];

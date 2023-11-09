@@ -414,6 +414,7 @@ struct ExternalWallet {
 
 struct ExternalWalletLoginParams {
   string url;
+  map<string, string> cookies;
 };
 
 enum UserType {

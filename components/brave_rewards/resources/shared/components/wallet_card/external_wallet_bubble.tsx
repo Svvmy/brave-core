@@ -39,6 +39,8 @@ export function ExternalWalletBubble (props: Props) {
       case 'bitflyer': return <BitflyerIcon />
       case 'uphold': return <UpholdIcon />
       case 'zebpay': return <ZebPayIcon />
+      // TODO(zenparsing): Add an icon
+      case 'solana': throw new Error('Not implemented')
     }
   }
 

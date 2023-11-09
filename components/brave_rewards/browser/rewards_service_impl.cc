@@ -1271,6 +1271,15 @@ std::vector<std::string> RewardsServiceImpl::GetExternalWalletProviders()
   }
 #endif
 
+  auto& self_custody_dict =
+      profile_->GetPrefs()->GetDict(prefs::kSelfCustodyAvailable);
+
+  if (auto solana_entry =
+          self_custody_dict.FindBool(internal::constant::kWalletSolana);
+      solana_entry && *solana_entry) {
+    providers.push_back(internal::constant::kWalletSolana);
+  }
+
   return providers;
 }
 
@@ -2240,6 +2249,8 @@ void RewardsServiceImpl::BeginExternalWalletLogin(
   if (!Connected() || !IsValidWalletType(wallet_type)) {
     return DeferCallback(FROM_HERE, std::move(callback), nullptr);
   }
+  // TODO(zenparsing): If the engine responds with cookies, then set the cookies
+  // appropriately.
   engine_->BeginExternalWalletLogin(wallet_type, std::move(callback));
 }
 
