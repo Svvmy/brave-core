@@ -367,6 +367,9 @@ MdTextButton::ButtonColors MdTextButton::GetButtonColors() {
           .text_color = AddOpacity(style.text_color, opacity)};
 }
 
+BEGIN_METADATA(MdTextButton)
+END_METADATA
+
 }  // namespace views
 
 namespace {
