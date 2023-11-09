@@ -1,7 +1,16 @@
 diff --git a/chrome/elevation_service/BUILD.gn b/chrome/elevation_service/BUILD.gn
-index 6ae8694531550df2835f3afbe5a699403f7495fb..75dc1d59241a98fd1d2cf391269a39434c778661 100644
+index 6ae8694531550df2835f3afbe5a699403f7495fb..a4328f979fa61c945cdb48f5728f1fff1a8b311f 100644
 --- a/chrome/elevation_service/BUILD.gn
 +++ b/chrome/elevation_service/BUILD.gn
+@@ -9,7 +9,7 @@ import("//chrome/process_version_rc_template.gni")
+ import("//testing/test.gni")
+ 
+ midl("elevation_service_idl") {
+-  sources = [ "elevation_service_idl.idl" ]
++  sources = [ "//brave/chromium_src/chrome/elevation_service/elevation_service_idl.idl" ]
+ 
+   writes_tlb = true
+ }
 @@ -87,6 +87,7 @@ source_set("lib") {
    deps = [
      "//base",
