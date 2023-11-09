@@ -34,6 +34,10 @@ TEST(BraveFontWhitelistTest, Platforms) {
 #else
   if (GetLinuxDistro().starts_with("Ubuntu 22.04")) {
     EXPECT_EQ(brave::GetFontWhitelistSizeForTesting(), 171UL);
+  } else if (GetLinuxDistro().starts_with("Ubuntu 20.04")) {
+    EXPECT_EQ(brave::GetFontWhitelistSizeForTesting(), 163UL);
+  } else if (GetLinuxDistro().starts_with("Fedora")) {
+    EXPECT_EQ(brave::GetFontWhitelistSizeForTesting(), 118L);
   } else {
     EXPECT_EQ(brave::GetFontWhitelistSizeForTesting(), 0UL);
   }
