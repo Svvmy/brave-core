@@ -1,9 +1,9 @@
 diff --git a/chrome/browser/BUILD.gn b/chrome/browser/BUILD.gn
-index 71c467a2f058eba4dbb75748ffcb21bde4f2d802..efc38714225f2a3d583fa58c363e0b09e750d692 100644
+index 96586e2b45edde67e616d104903359438bfccad1..a8d40332c66431ade8bf88c0765747113e04f018 100644
 --- a/chrome/browser/BUILD.gn
 +++ b/chrome/browser/BUILD.gn
-@@ -2719,6 +2719,7 @@ static_library("browser") {
-       "metrics/family_link_user_metrics_provider.h",
+@@ -2714,6 +2714,7 @@ static_library("browser") {
+       "performance_monitor/metric_evaluator_helper_posix.h",
      ]
    }
 +  import("//brave/browser/sources.gni") sources += brave_chrome_browser_sources deps += brave_chrome_browser_deps public_deps += brave_chrome_browser_public_deps allow_circular_includes_from += brave_chrome_browser_allow_circular_includes_from

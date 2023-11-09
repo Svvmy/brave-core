@@ -1,10 +1,12 @@
 diff --git a/third_party/rust/syn/v1/BUILD.gn b/third_party/rust/syn/v1/BUILD.gn
-index 44f38263ff17b25b6bbb23a70d98f235996d2ede..82af62cf3864ffa030199c2fb8c8c55bd521b013 100644
+index 61440b7ca68a27f00e217fc3a35cd822374fed7a..fe5dc79aecd4a331a18c5530c7f19185bdc59381 100644
 --- a/third_party/rust/syn/v1/BUILD.gn
 +++ b/third_party/rust/syn/v1/BUILD.gn
-@@ -140,4 +140,5 @@ cargo_crate("lib") {
+@@ -134,6 +134,7 @@ cargo_crate("lib") {
+     "visit",
+     "visit-mut",
    ]
++  features += [ "fold" ]
    build_root = "crate/build.rs"
    build_sources = [ "crate/build.rs" ]
-+  features += [ "fold" ]
- }
+ 
