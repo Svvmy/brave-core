@@ -69,110 +69,88 @@ public class DownloadServiceImpl extends DownloadService.Impl implements Connect
     }
 
     private void startDownloadFromQueue() {
-        PostTask.postTask(
-                TaskTraits.BEST_EFFORT_MAY_BLOCK, () -> {
-                    PlaylistRepository playlistRepository = new PlaylistRepository(mContext);
-                    if (playlistRepository != null) {
-                        DownloadQueueModel downloadQueueModel =
-                                playlistRepository.getFirstDownloadQueueModel();
-                        if (downloadQueueModel != null && mPlaylistService != null) {
-                            getService().startForeground(BRAVE_PLAYLIST_DOWNLOAD_NOTIFICATION_ID,
-                                    getDownloadNotification("", false, 0, 0));
-                            String playlistItemId = downloadQueueModel.getPlaylistItemId();
-                            mPlaylistService.getPlaylistItem(
-                                    playlistItemId, playlistItem -> {
-                                        DownloadUtils.downloadManifestFile(mContext,
-                                                mPlaylistService, playlistItem,
-                                                new DownloadUtils
-                                                        .HlsManifestDownloadDelegate() {
-                                                            @Override
-                                                            public void
-                                                            onHlsManifestDownloadCompleted(
-                                                                    Queue<Segment> segmentsQueue) {
-                                                                int total = segmentsQueue.size();
-                                                                String hlsMediaFilePath =
-                                                                        DownloadUtils
-                                                                                .getHlsMediaFilePath(
-                                                                                        playlistItem);
-                                                                DownloadUtils.deleteFileIfExist(
-                                                                        hlsMediaFilePath);
-                                                                DownloadUtils
-                                                                        .downalodHLSFile(mContext,
-                                                                                mPlaylistService,
-                                                                                playlistItem,
-                                                                                segmentsQueue,
-                                                                                new DownloadUtils
-                                                                                        .HlsFileDownloadDelegate() {
-                                                                                            @Override
-                                                                                            public void
-                                                                                            onDownloadProgress(
-                                                                                                    int downloadedSofar) {
-                                                                                                updateDownloadNotification(
-                                                                                                        playlistItem
-                                                                                                                .name,
-                                                                                                        true,
-                                                                                                        total,
-                                                                                                        downloadedSofar);
-                                                                                                PlaylistUtils
-                                                                                                        .updateDownloadProgress(new DownloadProgressModel(
-                                                                                                                playlistItem
-                                                                                                                        .id,
-                                                                                                                (long) total,
-                                                                                                                (long) downloadedSofar,
-                                                                                                                String.valueOf(
-                                                                                                                        (downloadedSofar
-                                                                                                                                * 100)
-                                                                                                                        / total)));
-                                                                                            }
+        PostTask.postTask(TaskTraits.BEST_EFFORT_MAY_BLOCK, () -> {
+            PlaylistRepository playlistRepository = new PlaylistRepository(mContext);
+            if (playlistRepository != null) {
+                DownloadQueueModel downloadQueueModel =
+                        playlistRepository.getFirstDownloadQueueModel();
+                if (downloadQueueModel != null && mPlaylistService != null) {
+                    // getService().startForeground(BRAVE_PLAYLIST_DOWNLOAD_NOTIFICATION_ID,
+                    //         getDownloadNotification("", false, 0, 0));
+                    String playlistItemId = downloadQueueModel.getPlaylistItemId();
+                    mPlaylistService.getPlaylistItem(playlistItemId, playlistItem -> {
+                        DownloadUtils.downloadManifestFile(mContext, mPlaylistService, playlistItem,
+                                new DownloadUtils.HlsManifestDownloadDelegate() {
+                                    @Override
+                                    public void onHlsManifestDownloadCompleted(
+                                            Queue<Segment> segmentsQueue) {
+                                        int total = segmentsQueue.size();
+                                        String hlsMediaFilePath =
+                                                DownloadUtils.getHlsMediaFilePath(playlistItem);
+                                        DownloadUtils.deleteFileIfExist(hlsMediaFilePath);
+                                        DownloadUtils.downalodHLSFile(mContext, mPlaylistService,
+                                                playlistItem, segmentsQueue,
+                                                new DownloadUtils.HlsFileDownloadDelegate() {
+                                                    @Override
+                                                    public void onDownloadProgress(
+                                                            int downloadedSofar) {
+                                                        // updateDownloadNotification(
+                                                        //         playlistItem
+                                                        //                 .name,
+                                                        //         true,
+                                                        //         total,
+                                                        //         downloadedSofar);
+                                                        PlaylistUtils.updateDownloadProgress(
+                                                                new DownloadProgressModel(
+                                                                        playlistItem.id,
+                                                                        (long) total,
+                                                                        (long) downloadedSofar,
+                                                                        String.valueOf(
+                                                                                (downloadedSofar
+                                                                                        * 100)
+                                                                                / total)));
+                                                    }
 
-                                                                                            @Override
-                                                                                            public void
-                                                                                            onDownloadCompleted(
-                                                                                                    String mediaPath) {
-                                                                                                PostTask.postTask(
-                                                                                                        TaskTraits
-                                                                                                                .BEST_EFFORT_MAY_BLOCK,
-                                                                                                        () -> {
-                                                                                                            long updatedFileSize =
-                                                                                                                    MediaUtils
-                                                                                                                            .getFileSizeFromUri(
-                                                                                                                                    mContext,
-                                                                                                                                    Uri.parse(
-                                                                                                                                            "file://"
-                                                                                                                                            + mediaPath));
-                                                                                                            mPlaylistService
-                                                                                                                    .updateItemHlsMediaFilePath(
-                                                                                                                            playlistItem
-                                                                                                                                    .id,
-                                                                                                                            mediaPath,
-                                                                                                                            updatedFileSize);
-                                                                                                            playlistRepository
-                                                                                                                    .updateDownloadQueueModel(new DownloadQueueModel(
-                                                                                                                            playlistItem
-                                                                                                                                    .id,
-                                                                                                                            DownloadStatus
-                                                                                                                                    .DOWNLOADED
-                                                                                                                                    .name()));
-                                                                                                            if (playlistRepository
-                                                                                                                            .getFirstDownloadQueueModel()
-                                                                                                                    != null) {
-                                                                                                                startDownloadFromQueue();
-                                                                                                            } else {
-                                                                                                                getService()
-                                                                                                                        .stopForeground(
-                                                                                                                                true);
-                                                                                                                getService()
-                                                                                                                        .stopSelf();
-                                                                                                            }
-                                                                                                        });
-                                                                                            }
-                                                                                        });
+                                                    @Override
+                                                    public void onDownloadCompleted(
+                                                            String mediaPath) {
+                                                        PostTask.postTask(TaskTraits.BEST_EFFORT_MAY_BLOCK, () -> {
+                                                            long updatedFileSize =
+                                                                    MediaUtils.getFileSizeFromUri(
+                                                                            mContext,
+                                                                            Uri.parse("file://"
+                                                                                    + mediaPath));
+                                                            mPlaylistService
+                                                                    .updateItemHlsMediaFilePath(
+                                                                            playlistItem.id,
+                                                                            mediaPath,
+                                                                            updatedFileSize);
+                                                            playlistRepository
+                                                                    .updateDownloadQueueModel(
+                                                                            new DownloadQueueModel(
+                                                                                    playlistItem.id,
+                                                                                    DownloadStatus
+                                                                                            .DOWNLOADED
+                                                                                            .name()));
+                                                            if (playlistRepository
+                                                                            .getFirstDownloadQueueModel()
+                                                                    != null) {
+                                                                startDownloadFromQueue();
+                                                            } else {
+                                                                // getService()
+                                                                //         .stopForeground(
+                                                                //                 true);
+                                                                getService().stopSelf();
                                                             }
                                                         });
-                                    });
-                        }
-                    }
-                });
+                                                    }
+                                                });
+                                    }
+                                });
+                    });
+                }
+            }
+        });
     }
 
     @Override

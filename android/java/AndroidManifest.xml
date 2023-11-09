@@ -206,7 +206,6 @@
 
 <service
     android:name="org.chromium.chrome.browser.playlist.download.DownloadService"
-    android:foregroundServiceType="dataSync"
     android:exported="false">
 </service>
 

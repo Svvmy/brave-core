@@ -21,6 +21,7 @@ import com.brave.playlist.model.MoveOrCopyModel;
 import com.brave.playlist.model.PlaylistItemModel;
 import com.brave.playlist.model.PlaylistModel;
 import com.brave.playlist.model.PlaylistOptionsModel;
+import com.brave.playlist.playback_service.VideoPlaybackService;
 import com.brave.playlist.util.ConstantUtils;
 import com.brave.playlist.util.PlaylistUtils;
 import com.brave.playlist.view.bottomsheet.MoveOrCopyToPlaylistBottomSheet;
@@ -281,13 +282,8 @@ public class PlaylistHostActivity extends AsyncInitializationActivity
 
         if (getIntent() != null) {
             if (!TextUtils.isEmpty(getIntent().getAction())
-                    && getIntent().getAction().equals(ConstantUtils.PLAYLIST_ACTION)
-                    && !TextUtils.isEmpty(
-                            getIntent().getStringExtra(ConstantUtils.CURRENT_PLAYLIST_ID))
-                    && !TextUtils.isEmpty(
-                            getIntent().getStringExtra(ConstantUtils.CURRENT_PLAYING_ITEM_ID))) {
-                showPlaylistForPlayer(getIntent().getStringExtra(ConstantUtils.CURRENT_PLAYLIST_ID),
-                        getIntent().getStringExtra(ConstantUtils.CURRENT_PLAYING_ITEM_ID));
+                    && getIntent().getAction().equals(ConstantUtils.PLAYLIST_ACTION)) {
+                showPlaylistForPlayer();
             } else {
                 String playlistId = getIntent().getStringExtra(ConstantUtils.PLAYLIST_ID);
                 if (!TextUtils.isEmpty(playlistId)
@@ -314,14 +310,15 @@ public class PlaylistHostActivity extends AsyncInitializationActivity
         transaction.commit();
     }
 
-    private void showPlaylistForPlayer(String playlistId, String playlistItemId) {
-        if (mPlaylistService == null) {
+    private void showPlaylistForPlayer() {
+        if (mPlaylistService == null
+                && TextUtils.isEmpty(VideoPlaybackService.Companion.getCurrentPlaylistId())) {
             return;
         }
-        loadPlaylist(playlistId);
+        loadPlaylist(VideoPlaybackService.Companion.getCurrentPlaylistId());
         PlaylistFragment playlistFragment = new PlaylistFragment();
         Bundle fragmentBundle = new Bundle();
-        fragmentBundle.putString(ConstantUtils.CURRENT_PLAYING_ITEM_ID, playlistItemId);
+        fragmentBundle.putBoolean(ConstantUtils.SHOULD_OPEN_PLAYER, true);
         playlistFragment.setArguments(fragmentBundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().replace(
                 R.id.fragment_container_view_tag, playlistFragment);

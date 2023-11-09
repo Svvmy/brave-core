@@ -86,6 +86,7 @@ resources = [
   "res/drawable/ic_tab_layout_dot_selector.xml",
   "res/drawable/onboarding_bg.xml",
   "res/drawable/playlist_onboarding_tab_selector.xml",
+  "res/drawable/rounded_bg_16.xml",
   "res/drawable/selected_dot.xml",
   "res/drawable/solid_curved_bg.xml",
   "res/drawable/tooltip_bg.xml",

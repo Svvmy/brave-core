@@ -314,8 +314,6 @@ brave_java_sources = [
   "../../brave/android/java/org/chromium/chrome/browser/playlist/download/DownloadUtils.java",
   "../../brave/android/java/org/chromium/chrome/browser/playlist/settings/BravePlaylistPreferences.java",
   "../../brave/android/java/org/chromium/chrome/browser/playlist/settings/BravePlaylistResetPreference.java",
-  "../../brave/android/java/org/chromium/chrome/browser/playlist/settings/BravePlaylistSaveMediaFragment.java",
-  "../../brave/android/java/org/chromium/chrome/browser/playlist/settings/RadioButtonGroupPlaylistAutoSavePreference.java",
   "../../brave/android/java/org/chromium/chrome/browser/preferences/BravePrefServiceBridge.java",
   "../../brave/android/java/org/chromium/chrome/browser/preferences/website/BraveShieldsContentSettings.java",
   "../../brave/android/java/org/chromium/chrome/browser/preferences/website/BraveShieldsContentSettingsObserver.java",

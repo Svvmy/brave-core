@@ -704,8 +704,7 @@ public abstract class BraveToolbarLayoutImpl extends ToolbarLayout
             }
             if (playlistItems.size() > 0) {
                 mPlaylistService.addMediaFiles(playlistItems.toArray(new PlaylistItem[0]),
-                        ConstantUtils.DEFAULT_PLAYLIST, shouldCacheMediaFilesForPlaylist(),
-                        addedItems -> {});
+                        ConstantUtils.DEFAULT_PLAYLIST, true, addedItems -> {});
                 int mediaCount = SharedPreferencesManager.getInstance().readInt(
                         PlaylistPreferenceUtils.ADD_MEDIA_COUNT);
                 if (mediaCount < PLAYLIST_MEDIA_COUNT_LIMIT) {
@@ -726,7 +725,7 @@ public abstract class BraveToolbarLayoutImpl extends ToolbarLayout
         org.chromium.url.mojom.Url contentUrl = new org.chromium.url.mojom.Url();
         contentUrl.url = currentTab.getUrl().getSpec();
         mPlaylistService.addMediaFilesFromPageToPlaylist(
-                ConstantUtils.DEFAULT_PLAYLIST, contentUrl, shouldCacheMediaFilesForPlaylist());
+                ConstantUtils.DEFAULT_PLAYLIST, contentUrl, true);
     }
 
     private void showAddedToPlaylistSnackBar() {
@@ -775,20 +774,6 @@ public abstract class BraveToolbarLayoutImpl extends ToolbarLayout
         } catch (BraveActivity.BraveActivityNotFoundException e) {
             Log.e(TAG, "showAddedToPlaylistSnackBar " + e);
         }
-    }
-
-    private boolean shouldCacheMediaFilesForPlaylist() {
-        boolean shouldCacheOnlyOnWifi =
-                (SharedPreferencesManager.getInstance().readInt(
-                         BravePlaylistPreferences.PREF_AUTO_SAVE_MEDIA_FOR_OFFLINE, 0)
-                                == 2
-                        && ConnectionUtils.isWifiAvailable(getContext()));
-
-        boolean shouldCache = SharedPreferencesManager.getInstance().readInt(
-                                      BravePlaylistPreferences.PREF_AUTO_SAVE_MEDIA_FOR_OFFLINE, 0)
-                        == 0
-                || shouldCacheOnlyOnWifi;
-        return shouldCache;
     }
 
     private void checkForTooltip(Tab tab) {

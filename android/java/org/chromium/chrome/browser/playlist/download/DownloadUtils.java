@@ -4,6 +4,7 @@
  * You can obtain one at https://mozilla.org/MPL/2.0/. */
 package org.chromium.chrome.browser.playlist.download;
 import android.content.Context;
+import android.os.Environment;
 
 import androidx.media3.common.util.UriUtil;
 import androidx.media3.exoplayer.hls.playlist.HlsMediaPlaylist.Segment;
@@ -165,6 +166,9 @@ public class DownloadUtils {
         return PathUtils.getDataDirectory() + File.separator + getPlaylistIdFromFile(playlistItem)
                 + File.separator + "playlist" + File.separator + playlistItem.id + File.separator
                 + "media_file.mp4";
+        // File file = new
+        // File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+        // File.separator+"media.mp4"); return file.getAbsolutePath();
     }
 
     public static String getHlsManifestFilePath(PlaylistItem playlistItem) {
