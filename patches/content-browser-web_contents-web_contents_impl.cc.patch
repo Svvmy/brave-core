@@ -1,5 +1,5 @@
 diff --git a/content/browser/web_contents/web_contents_impl.cc b/content/browser/web_contents/web_contents_impl.cc
-index 42dd8d0a247da56a7e8473ffa7b2818402d94c6c..584540393fd0ab3273bc3e162c5dd6a92afa51f9 100644
+index da4397368bf95c6e8a9756463100d5e23e5ba87a..ff9fd2daebcd7f05cbfa0abdb06e8eb3523b5382 100644
 --- a/content/browser/web_contents/web_contents_impl.cc
 +++ b/content/browser/web_contents/web_contents_impl.cc
 @@ -4511,7 +4511,7 @@ FrameTree* WebContentsImpl::CreateNewWindow(

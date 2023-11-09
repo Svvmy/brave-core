@@ -1,5 +1,5 @@
 diff --git a/chrome/browser/prefs/browser_prefs.cc b/chrome/browser/prefs/browser_prefs.cc
-index bd71f8dcff8bcb7d2ff89c79e2a7b2bb3f42ab23..e04a71eab4867fe766feeed9f38e4fa06ecadf4b 100644
+index a2c86416d43f6b53f7d9e4e9cf634ebd39a6a662..0951c279fb2bc1924005ba24b4b98c640728b163 100644
 --- a/chrome/browser/prefs/browser_prefs.cc
 +++ b/chrome/browser/prefs/browser_prefs.cc
 @@ -1616,6 +1616,8 @@ void RegisterLocalState(PrefRegistrySimple* registry) {
