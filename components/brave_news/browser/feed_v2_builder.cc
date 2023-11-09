@@ -512,23 +512,6 @@ std::vector<mojom::FeedItemV2Ptr> GenerateAd() {
   return result;
 }
 
-void MaybeInsertAds(const mojom::FeedV2Ptr& feed, size_t iteration) {
-  constexpr size_t kBlocksPerAd = 2;
-
-  // Insert an advertisment as the second item in the feed.
-  if (feed->items.size() > 2 && !feed->items.at(1)->is_advert()) {
-    auto ad = GenerateAd();
-    feed->items.insert(feed->items.begin() + 1,
-                       std::make_move_iterator(ad.begin()),
-                       std::make_move_iterator(ad.end()));
-  }
-
-  if (iteration % (kBlocksPerAd + 1) == kBlocksPerAd) {
-    auto ad = GenerateAd();
-    std::ranges::move(ad, std::back_inserter(feed->items));
-  }
-}
-
 // Generates a "Special Block" this will be one of the following:
 // 1. An advert, if we have one
 // 2. A "Discover" entry, which suggests some more publishers for the user to
@@ -924,20 +907,39 @@ void FeedV2Builder::GenerateFeed(
 mojom::FeedV2Ptr FeedV2Builder::GenerateBasicFeed(const FeedItems& feed_items) {
   DVLOG(1) << __FUNCTION__;
 
+  auto suggested_publisher_ids = suggested_publisher_ids_;
   auto articles =
       GetArticleInfos(publishers_controller_->GetLastLocale(), feed_items,
                       publishers_controller_->GetLastPublishers(), signals_);
 
   auto feed = mojom::FeedV2::New();
-  size_t iteration = 0;
+
+  constexpr size_t kIterationsPerAd = 2;
+  size_t blocks = 0;
   while (!articles.empty()) {
     std::vector<mojom::FeedItemV2Ptr> items;
-    if (iteration == 0) {
-      items = GenerateBlock(articles, /*inline_discovery_ratio=*/0);
+    items = GenerateBlock(articles, /*inline_discovery_ratio=*/0);
+    if (items.empty()) {
+      break;
     }
 
-    MaybeInsertAds(feed, iteration++);
+    // After the first block, every second block should be an ad.
+    if (blocks % kIterationsPerAd == 0 && blocks != 0) {
+      std::ranges::move(GenerateSpecialBlock(suggested_publisher_ids), std::back_inserter(items));
+    }
+
+    std::ranges::move(items, std::back_inserter(feed->items));
+    blocks++;
   }
+
+  // Insert an ad as the second item.
+  if (feed->items.size() > 1) {
+    auto ad = GenerateAd();
+    feed->items.insert(feed->items.begin() + 1,
+                       std::make_move_iterator(ad.begin()),
+                       std::make_move_iterator(ad.end()));
+  }
+
   return feed;
 }
 
