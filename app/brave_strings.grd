@@ -350,9 +350,18 @@ If you update this file, be sure also to update google_chrome_strings.grd. -->
       </message>
       <if expr="not chromeos_ash">
         <!-- Browser Window Title Format -->
-        <message name="IDS_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for titles displayed in tabs and popup windows">
-          <ph name="PAGE_TITLE">$1<ex>Brave</ex></ph> - Brave
-        </message>
+        <if expr="_is_chrome_for_testing_branded">
+          <then>
+            <message name="IDS_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for titles displayed in tabs and popup windows">
+              <ph name="PAGE_TITLE">$1<ex>Brave</ex></ph> - Brave for Testing
+            </message>
+          </then>
+          <else>
+            <message name="IDS_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for titles displayed in tabs and popup windows">
+              <ph name="PAGE_TITLE">$1<ex>Brave</ex></ph> - Brave
+            </message>
+          </else>
+        </if>
       </if>
       <if expr="chromeos_ash">
         <!-- Browser Window Title Format -->
@@ -380,18 +389,27 @@ If you update this file, be sure also to update google_chrome_strings.grd. -->
       </if>
       <!-- Accessible window title format - includes the channel, and the same
            on all browser platforms rather than different on ChromeOS. -->
-      <message name="IDS_ACCESSIBLE_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for the accessible name of a tabbed browser window">
-        <ph name="PAGE_TITLE">$1<ex>Brave</ex></ph> - Brave
-      </message>
-      <message name="IDS_ACCESSIBLE_BETA_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for the accessible name of a tabbed browser window for the beta channel version of the browser">
-        <ph name="PAGE_TITLE">$1<ex>Brave</ex></ph> - Brave Beta
-      </message>
-      <message name="IDS_ACCESSIBLE_DEV_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for the accessible name of a tabbed browser window for the developer (dev) channel version of the browser">
-        <ph name="PAGE_TITLE">$1<ex>Brave</ex></ph> - Brave Dev
-      </message>
-      <message name="IDS_ACCESSIBLE_CANARY_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for the accessible name of a tabbed browser window for the canary (nightly build) channel version of the browser">
-        <ph name="PAGE_TITLE">$1<ex>Brave</ex></ph> - Brave Canary
-      </message>
+      <if expr="_is_chrome_for_testing_branded">
+        <then>
+          <message name="IDS_ACCESSIBLE_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for the accessible name of a tabbed browser window">
+            <ph name="PAGE_TITLE">$1<ex>Brave</ex></ph> - Brave for Testing
+          </message>
+        </then>
+        <else>
+          <message name="IDS_ACCESSIBLE_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for the accessible name of a tabbed browser window">
+            <ph name="PAGE_TITLE">$1<ex>Brave</ex></ph> - Brave
+          </message>
+          <message name="IDS_ACCESSIBLE_BETA_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for the accessible name of a tabbed browser window for the beta channel version of the browser">
+            <ph name="PAGE_TITLE">$1<ex>Brave</ex></ph> - Brave Beta
+          </message>
+          <message name="IDS_ACCESSIBLE_DEV_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for the accessible name of a tabbed browser window for the developer (dev) channel version of the browser">
+            <ph name="PAGE_TITLE">$1<ex>Brave</ex></ph> - Brave Dev
+          </message>
+          <message name="IDS_ACCESSIBLE_CANARY_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for the accessible name of a tabbed browser window for the canary (nightly build) channel version of the browser">
+            <ph name="PAGE_TITLE">$1<ex>Brave</ex></ph> - Brave Canary
+          </message>
+        </else>
+      </if>
       <if expr="_is_chrome_for_testing_branded">
         <then>
           <message name="IDS_ABOUT_VERSION_COMPANY_NAME" desc="Company name on the about pages">
@@ -730,6 +748,11 @@ Permissions you've already given to websites and apps may apply to this account.
       </message>
       <message name="IDS_BLOCK_DOWNLOAD_REASON_UNVERIFIED_NO_SAFE_BROWSING" desc="On the chrome://downloads page, the description shown for a blocked file that could not be verified because Safe Browsing is off.">
         Brave blocked this download because you turned Safe Browsing off and the file can't be verified
+      </message>
+
+      <!-- chrome://downloads page bypass dangerous download warning dialog -->
+      <message name="IDS_DOWNLOAD_WARNING_BYPASS_DIALOG_LEARN_MORE_LINK" desc="On the downloads page, the label for the link to the help center in the dialog to bypass a dangerous download warning.">
+        Learn why Brave blocks some files
       </message>
 
       <!-- Abandon in-progress downloads confirmation dialog -->
