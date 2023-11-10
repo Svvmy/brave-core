@@ -8,9 +8,9 @@
 #include <tuple>
 #include <vector>
 
-#include "brave/third_party/blink/renderer/brave_font_whitelist.h"
-
 #include "base/containers/fixed_flat_set.h"
+#include "base/linux_util.h"
+#include "brave/third_party/blink/renderer/brave_font_whitelist.h"
 #include "testing/gtest/include/gtest/gtest.h"
 #include "third_party/blink/renderer/platform/wtf/text/atomic_string.h"
 
