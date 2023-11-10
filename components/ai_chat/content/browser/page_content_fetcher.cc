@@ -59,11 +59,9 @@ class PageContentFetcher {
  public:
   void Start(mojo::Remote<mojom::PageContentExtractor> content_extractor,
              scoped_refptr<network::SharedURLLoaderFactory> url_loader_factory,
-             FetchPageContentCallback callback,
-             bool has_user_opted_in) {
+             FetchPageContentCallback callback) {
     url_loader_factory_ = url_loader_factory;
     content_extractor_ = std::move(content_extractor);
-    has_user_opted_in_ = has_user_opted_in;
 
     if (!content_extractor_) {
       DeleteSelf();
@@ -105,10 +103,6 @@ class PageContentFetcher {
       DVLOG(1) << __func__ << ": Got content with char length of "
                << content.length();
       SendResultAndDeleteSelf(std::move(callback), content, false);
-      return;
-    }
-    // We dont make network request if the user has not opted-in
-    if (!has_user_opted_in_) {
       return;
     }
     // If it's video, we expect content url
@@ -231,15 +225,13 @@ class PageContentFetcher {
 
   scoped_refptr<network::SharedURLLoaderFactory> url_loader_factory_;
   mojo::Remote<mojom::PageContentExtractor> content_extractor_;
-  bool has_user_opted_in_;
   base::WeakPtrFactory<PageContentFetcher> weak_ptr_factory_{this};
 };
 
 }  // namespace
 
 void FetchPageContent(content::WebContents* web_contents,
-                      FetchPageContentCallback callback,
-                      bool has_user_opted_in) {
+                      FetchPageContentCallback callback) {
   VLOG(2) << __func__ << " Extracting page content from renderer...";
 
   auto* primary_rfh = web_contents->GetPrimaryMainFrame();
@@ -264,8 +256,7 @@ void FetchPageContent(content::WebContents* web_contents,
                      ->GetDefaultStoragePartition()
                      ->GetURLLoaderFactoryForBrowserProcess()
                      .get();
-  fetcher->Start(std::move(extractor), loader, std::move(callback),
-                 has_user_opted_in);
+  fetcher->Start(std::move(extractor), loader, std::move(callback));
 }
 
 }  // namespace ai_chat

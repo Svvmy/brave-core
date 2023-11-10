@@ -300,7 +300,8 @@ void ConversationDriver::MaybeGeneratePageText() {
   // for more page content (e.g. video transcript).
   // Perf: make sure we're not doing this when the feature
   // won't be used (e.g. not opted in or no active conversation).
-  if (is_page_text_fetch_in_progress_ || !article_text_.empty() || !is_conversation_active_ ||
+  if (is_page_text_fetch_in_progress_ || !article_text_.empty() ||
+      !HasUserOptedIn() || !is_conversation_active_ ||
       !IsDocumentOnLoadCompletedInPrimaryMainFrame()) {
     return;
   }
