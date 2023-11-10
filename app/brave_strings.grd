@@ -683,6 +683,9 @@ Permissions you've already given to websites and apps may apply to this account.
       <message name="IDS_DOWNLOAD_BUBBLE_SUBPAGE_SUMMARY_WARNING_BLOCKED_LEARN_MORE_LINK" desc="Text for the link to the help page about why Brave blocks some downloaded files.">
         Learn why Brave blocks some downloads
       </message>
+      <message name="IDS_DOWNLOAD_BUBBLE_SUBPAGE_SUMMARY_DEEP_SCANNING_PROMPT_LOCAL_DECRYPTION" desc="Subpage summary of warning for a file where we recommend providing the password for on-device decryption">
+        This file may be dangerous<ph name="LINE_BREAK">$1</ph>Brave can check this download for you if you provide the password — your password stays on your device
+      </message>
 
       <!-- Download Shelf Items -->
       <message name="IDS_DOWNLOAD_STATUS_CRX_INSTALL_RUNNING" desc="Message shown when a CRX has been downloaded and is being unpacked.">
@@ -1776,6 +1779,11 @@ Permissions you've already given to websites and apps may apply to this account.
           Installation complete.
         </message>
 
+        <!--extra code-->
+        <message name="IDS_EXTRA_CODE" desc="The optional extra code for any of the errors below">
+          Extra code: <ph name="EXTRA_CODE">$1<ex>0x80071234</ex></ph>.
+        </message>
+
         <!--Network errors.-->
         <message name="IDS_NO_NETWORK_PRESENT_ERROR" desc="Error message displayed in the main dialog when the Updater is unable to connect to the network.">
           Unable to connect to the Internet. If you use a firewall, please allowlist <ph name="PRODUCT_EXE_NAME">$1<ex>BraveUpdater.exe</ex></ph>.
@@ -1821,9 +1829,25 @@ Permissions you've already given to websites and apps may apply to this account.
         <message name="IDS_GENERIC_SERVICE_ERROR" desc="Error message displayed in the main dialog for runtime errors that occur in the update client service.">
           Service error: <ph name="SERVICE_ERROR">$1<ex>error-internal</ex></ph>.
         </message>
+
         <!--Install errors.-->
         <message name="IDS_GENERIC_INSTALL_ERROR" desc="Error message displayed in the main dialog for runtime errors that occur while installing.">
           Install error: <ph name="INSTALL_ERROR">$1<ex>error-internal</ex></ph>
+        </message>
+        <message name="IDS_INSTALL_REBOOT" desc="Message displayed in the main dialog when a system reboot is required or has been initiated after installing.">
+          Reboot required: <ph name="INSTALL_SUCCESS">$1<ex>success-message-internal</ex></ph>
+        </message>
+        <message name="IDS_APP_INSTALL_DISABLED_BY_GROUP_POLICY" desc="Error message displayed in the main dialog when an IT admin has disabled installation or update of this application using Windows Group Policy.">
+          Install error: Your network administrator has applied a Group Policy that prevents installation: <ph name="INSTALL_ERROR">$1<ex>error-internal</ex></ph>
+        </message>
+        <message name="IDS_INVALID_INSTALLER_FILENAME" desc="Error message displayed in the main dialog when the application installer's filename or extension is invalid or unsupported.">
+          Install error: The installer filename is invalid or unsupported.
+        </message>
+        <message name="IDS_INSTALLER_FAILED_TO_START" desc="Error message displayed in the main dialog when the application installer process fails to start.">
+          Install error: The installer process failed to start.
+        </message>
+        <message name="IDS_INSTALLER_TIMED_OUT" desc="Error message displayed in the main dialog when the application installer does not complete in the allowed amount of time.">
+          Install error: The installer did not complete. The installation has been aborted.
         </message>
       </if>
       <!-- High Efficiency Chip strings -->

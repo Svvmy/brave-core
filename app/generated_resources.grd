@@ -2097,6 +2097,9 @@ are declared in tools/grit/grit_rule.gni.
       <message name="IDS_BLOCK_REASON_PROMPT_FOR_SCANNING_UPDATED" desc="Message shown to the user on chrome://downloads page to explain that this download is recommended to be scanned.">
         This file might be a virus or malware. You can send it to Brave to check if it's unsafe.
       </message>
+      <message name="IDS_BLOCK_REASON_PROMPT_FOR_LOCAL_PASSWORD_SCANNING" desc="Message shown to the user on chrome://downloads page to explain that this download is recommended to be scanned.">
+        This file may be dangerous
+      </message>
       <message name="IDS_DEEP_SCANNED_OPENED_DANGEROUS_DESCRIPTION" desc="Message shown to the user on chrome://downloads page to explain this this download was deep scanned, and found to be malicious.">
         This file is dangerous
       </message>
@@ -2287,6 +2290,9 @@ are declared in tools/grit/grit_rule.gni.
       </message>
       <message name="IDS_DOWNLOAD_BYPASS_DEEP_SCAN_UPDATED" desc="In the download view, the 'Open' button when prompt for deep scan">
         Open anyway
+      </message>
+      <message name="IDS_DOWNLOAD_LOCAL_PASSWORD_SCAN" desc="On the downloads page, the label for the button to check a download for malware">
+        Check for malware
       </message>
 
       <message name="IDS_DOWNLOAD_KEEP_DANGEROUS_FILE" desc="On the downloads page, the label for the button to download a dangerous file despite its danger.">
@@ -2985,6 +2991,29 @@ are declared in tools/grit/grit_rule.gni.
       </message>
       <message name="IDS_DOWNLOAD_BUBBLE_PASSWORD_PROMPT_ACCESSIBLE_ALERT_INVALID" desc="Accessible alert text for screen readers when users focus on the password textfield with subtext indicating invalid password">
         Incorrect password. Try again.
+      </message>
+
+      <!-- Local archive decryption in download bubble -->
+      <message name="IDS_DOWNLOAD_BUBBLE_STATUS_LOCAL_DECRYPTION_STATUS" desc="Prompt when a suspicious archive is blocked due to being encrypted">
+        Suspicious file blocked
+      </message>
+      <message name="IDS_DOWNLOAD_BUBBLE_STATUS_PASSWORD_NEEDED" desc="Prompt when a suspicious archive is blocked due to being encrypted">
+        Password needed
+      </message>
+      <message name="IDS_DOWNLOAD_BUBBLE_ACCEPT_LOCAL_DECRYPTION" desc="Label on button to accept using the password for checking a download for malware">
+        Check for malware
+      </message>
+      <message name="IDS_DOWNLOAD_BUBBLE_BYPASS_LOCAL_DECRYPTION" desc="Label on button to bypass using the password for checking a download for malware">
+        Download suspicious file
+      </message>
+      <message name="IDS_DOWNLOAD_BUBBLE_LOCAL_DECRYPTION_CANCEL" desc="Label on button to cancel checking a download for malware">
+        Cancel download
+      </message>
+      <message name="IDS_DOWNLOAD_BUBBLE_SUBPAGE_SUMMARY_LOCAL_DECRYPTION_IN_PROGRESS" desc="Description in the download bubble when a file is being checked for malware">
+        This file may be dangerous<ph name="LINE_BREAK">$1</ph>This check is taking longer than usual...
+      </message>
+      <message name="IDS_DOWNLOAD_BUBBLE_STATUS_LOCAL_DECRYPTING" desc="Status text for a download item that is being checked for malware.">
+        Checking for malware...
       </message>
 
       <!-- Desktop omnibox PWA install icon -->
@@ -5141,6 +5170,9 @@ are declared in tools/grit/grit_rule.gni.
         <message name="IDS_EXTENSION_PROMPT_WARNING_ENTERPRISE_DEVICE_ATTRIBUTES" desc="Permission string for enterprise device attributes permission.">
           See device information, such as its serial number or asset ID
         </message>
+        <message name="IDS_EXTENSION_PROMPT_WARNING_ENTERPRISE_KIOSK_INPUT" desc="Permission string for enterprise kiosk input permission.">
+          Change the system keyboard layout
+        </message>
         <message name="IDS_EXTENSION_PROMPT_WARNING_ENTERPRISE_NETWORKING_ATTRIBUTES" desc="Permission string for enterprise networking attributes permission.">
           See network information, such as your IP or MAC address
         </message>
@@ -5485,6 +5517,12 @@ are declared in tools/grit/grit_rule.gni.
           <message name="IDS_EXTENSIONS_PINNED_BY_ADMIN_ACCESSIBLE_NAME" desc="The accessible name indicating that an extension has been 'pinned' to the toolbar by the controlling administrator (sentence case).">
             <ph name="EXTENSION_NAME">$1<ex>Gmail Checker</ex></ph> is pinned by your administrator
           </message>
+          <message name="IDS_EXTENSIONS_SUBMENU_OPEN_SIDE_PANEL_ITEM" desc="The text for the link in the extensions menu to open the side panel corresponding to the extension (sentence case).">
+            Open side panel
+          </message>
+          <message name="IDS_EXTENSIONS_SUBMENU_CLOSE_SIDE_PANEL_ITEM" desc="The text for the link in the extensions menu to close the side panel corresponding to the extension (sentence case).">
+            Close side panel
+          </message>
           <message name="IDS_MANAGE_EXTENSION" desc="The text for the button in the extension's context menu used to open the chrome://extensions/?id=xxx page and manage a specific extension (sentence case).">
             Manage extension
           </message>
@@ -5579,6 +5617,12 @@ are declared in tools/grit/grit_rule.gni.
           </message>
           <message name="IDS_EXTENSIONS_PINNED_BY_ADMIN_ACCESSIBLE_NAME" desc="The accessible name indicating that an extension has been 'pinned' to the toolbar by the controlling administrator (sentence case).">
             <ph name="EXTENSION_NAME">$1<ex>Gmail Checker</ex></ph> is pinned by your Administrator
+          </message>
+          <message name="IDS_EXTENSIONS_SUBMENU_OPEN_SIDE_PANEL_ITEM" desc="The text for the link in the extensions menu to open the side panel corresponding to the extension (title case).">
+            Open Side Panel
+          </message>
+          <message name="IDS_EXTENSIONS_SUBMENU_CLOSE_SIDE_PANEL_ITEM" desc="The text for the link in the extensions menu to close the side panel corresponding to the extension (title case).">
+            Close Side Panel
           </message>
           <message name="IDS_MANAGE_EXTENSION" desc="The text for the button in the extension's context menu used to open the chrome://extensions/?id=xxx page and manage a specific extension (title case).">
             Manage Extension
@@ -7454,6 +7498,39 @@ Keep your key file in a safe place. You will need it to create new versions of y
       </message>
       <message name="IDS_NTP_WEBSTORE_TOAST_BUTTON_TEXT" desc="The text displayed in the New Tab Page webstore themes toast button">
         Find themes
+      </message>
+      <message name="IDS_NTP_WALLPAPER_SEARCH_GENERIC_ERROR_DESCRIPTION" desc="The description of the generic error displayed when wallpaper search fails.">
+        Please try again later.
+      </message>
+      <message name="IDS_NTP_WALLPAPER_SEARCH_GENERIC_ERROR_TITLE" desc="The title of the generic error displayed when wallpaper search fails.">
+        Something went wrong.
+      </message>
+      <message name="IDS_NTP_WALLPAPER_SEARCH_HEADER" translateable="false" desc="Header for the wallpaper search page of Customize Brave Side Panel.">
+        Wallpaper Search
+      </message>
+      <message name="IDS_NTP_WALLPAPER_SEARCH_HISTORY_HEADER" translateable="false" desc="Header for the wallpaper search section for showing past themes.">
+        Your recent themes
+      </message>
+      <message name="IDS_NTP_WALLPAPER_SEARCH_OFFLINE_DESCRIPTION" desc="The description of the message displayed by wallpaper search when the browser is offline.">
+        Check your internet connection and try again.
+      </message>
+      <message name="IDS_NTP_WALLPAPER_SEARCH_OFFLINE_TITLE" desc="The title of the message displayed by wallpaper search when the browser is offline.">
+        Looks like you're offline.
+      </message>
+      <message name="IDS_NTP_WALLPAPER_SEARCH_REQUEST_THROTTLED_DESCRIPTION" desc="The description of the message displayed when a wallpaper search request is throttled.">
+        You can try again tomorrow.
+      </message>
+      <message name="IDS_NTP_WALLPAPER_SEARCH_REQUEST_THROTTLED_TITLE" desc="The title of the message displayed when a wallpaper search request is throttled.">
+        You've reached your limit for today.
+      </message>
+      <message name="IDS_NTP_WALLPAPER_SEARCH_SUBMIT_AGAIN_BTN_TEXT" translateable="false" desc="Button text for submitting the form to get wallpaper search results when the user has already done it before.">
+        Search Again
+      </message>
+      <message name="IDS_NTP_WALLPAPER_SEARCH_SUBMIT_BTN_TEXT" translateable="false" desc="Button text for submitting the form to get wallpaper search results.">
+        Search
+      </message>
+      <message name="IDS_NTP_WALLPAPER_SEARCH_TRY_AGAIN_CTA" desc="Call to action displayed when wallpaper search fails that asks user to try again.">
+        Try again
       </message>
 
       <!-- NTP Modules -->
@@ -10133,6 +10210,9 @@ Check your passwords anytime in <ph name="GOOGLE_PASSWORD_MANAGER">$1<ex>Brave P
       </message>
       <message name="IDS_TAB_ORGANIZATION_TIP_ACTION" desc="The actionable text of the tip in the tab organization UI" translateable="false">
         Show me how
+      </message>
+      <message name="IDS_TAB_ORGANIZATION_LEARN_MORE" desc="The actionable text in the tab organization UI results state for getting more information" translateable="false">
+        Learn more
       </message>
 
       <!-- Strings for Window Titles in Menus -->
@@ -15874,6 +15954,18 @@ Please help our engineers fix this problem. Tell us what happened right before y
     <message name="IDS_IWA_INSTALLER_DISABLED_SUBTITLE" desc="Subtitle of the feature disabled screen of the IWA installer. $1 = IDS_IWA_INSTALLER_DISABLED_CHANGE_PREFERENCE">
       You security preferences do not allow installations of Isolated Apps. <ph name="CHANGE_PREFERENCE">$1<ex>Change your preferences</ex></ph>
     </message>
+    <message name="IDS_IWA_INSTALLER_SHOW_METADATA_SUBTITLE" desc="Subtitle of the pre-installation app info summary screen of the Isolated Web App installer">
+      This application will be installed on your currently used Brave profile. <ph name="MANAGE_PROFILES">$1<ex>Manage your Brave profiles</ex></ph>
+    </message>
+    <message name="IDS_IWA_INSTALLER_SHOW_METADATA_MANAGE_PROFILES" desc="Link to a settings page that lets the user manage their active profiles">
+      Manage your Brave profiles
+    </message>
+    <message name="IDS_IWA_INSTALLER_SHOW_METADATA_APP_NAME_LABEL" desc="Label before the Isolated Web App name in the pre-install app info summary screen">
+      Application: <ph name="APP_NAME">$1<ex>Brave Maps</ex></ph>
+    </message>
+    <message name="IDS_IWA_INSTALLER_SHOW_METADATA_APP_VERSION_LABEL" desc="Label before the Isolated Web App version in the pre-install app info summary screen">
+      Version: <ph name="APP_VERSION">$1<ex>1.0.0</ex></ph>
+    </message>
     <message name="IDS_IWA_INSTALLER_VERIFICATION_TITLE" desc="Title of the verification step of the IWA installation">
       Brave is verifying the installation bundle
     </message>
@@ -15885,6 +15977,12 @@ Please help our engineers fix this problem. Tell us what happened right before y
         =0 {Checking public key and integrity block... Less than 1 minute remaining}
         =1 {Checking public key and integrity block... 1 minute remaining}
         other {Checking public key and integrity block... # minutes remaining}}
+    </message>
+    <message name="IDS_IWA_INSTALLER_VERIFICATION_ERROR_TITLE" desc="Title of an error popup during the verification step of the Isolated Web App installer">
+      Brave failed to verify this installation bundle
+    </message>
+    <message name="IDS_IWA_INSTALLER_VERIFICATION_ERROR_SUBTITLE" desc="Subtitle of an error popup during the verification step of the Isolated Web App installer">
+      This bundle might be broken or compromised. Please close this window and download it again
     </message>
   </messages>
 </release>
