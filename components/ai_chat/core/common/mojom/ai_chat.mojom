@@ -152,3 +152,7 @@ interface ChatUIPage {
   OnSiteInfoChanged(bool is_fetching, SiteInfo? info);
   OnFaviconImageDataChanged(array<uint8> favicon_image_data);
 };
+
+interface CredentialManagerHelper {
+  GetPremiumStatus() => (PremiumStatus result);
+};
