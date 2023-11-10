@@ -152,5 +152,6 @@ interface ChatUIPage {
   // |is_fetching| will be |true|.
   OnSiteInfoChanged(bool is_fetching, SiteInfo info);
   OnFaviconImageDataChanged(array<uint8> favicon_image_data);
-  OnRequestPending();
+  // This reports if there are any pending entries to be sent to the remote LLM.
+  OnConversationEntryPending();
 };

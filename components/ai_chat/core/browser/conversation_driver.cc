@@ -267,19 +267,19 @@ bool ConversationDriver::MaybePopPendingRequests() {
     return false;
   }
 
-  if (!pending_request_) {
+  if (!pending_conversation_entry_) {
     return false;
   }
 
   // We don't discard requests related to summarization until we have the
   // article text.
   if (article_text_.empty() &&
-      base::Contains(pending_request_->text, "Summarize")) {
+      base::Contains(pending_conversation_entry_->text, "Summarize")) {
     return false;
   }
 
-  mojom::ConversationTurn request = std::move(*pending_request_);
-  pending_request_.reset();
+  mojom::ConversationTurn request = std::move(*pending_conversation_entry_);
+  pending_conversation_entry_.reset();
   MakeAPIRequestWithConversationHistoryUpdate(std::move(request));
   return true;
 }
@@ -387,7 +387,7 @@ void ConversationDriver::CleanUp() {
   chat_history_.clear();
   article_text_.clear();
   suggested_questions_.clear();
-  pending_request_.reset();
+  pending_conversation_entry_.reset();
   is_same_document_navigation_ = false;
   is_page_text_fetch_in_progress_ = false;
   is_request_in_progress_ = false;
@@ -518,11 +518,11 @@ void ConversationDriver::MakeAPIRequestWithConversationHistoryUpdate(
   if (!is_conversation_active_ || !HasUserOptedIn()) {
     // This function should not be presented in the UI if the user has not
     // opted-in yet.
-    pending_request_ =
+    pending_conversation_entry_ =
         std::make_unique<mojom::ConversationTurn>(std::move(turn));
     // Invoking this before the creation of the page handler means the pending
     // request will not be reported.
-    OnRequestPending();
+    OnConversationEntryPending();
     return;
   }
 
@@ -688,8 +688,8 @@ bool ConversationDriver::IsPageContentsTruncated() {
           GetCurrentModel().max_page_content_length);
 }
 
-bool ConversationDriver::HasPendingRequest() {
-  return pending_request_ != nullptr;
+bool ConversationDriver::HasPendingConversationEntry() {
+  return pending_conversation_entry_ != nullptr;
 }
 
 void ConversationDriver::GetPremiumStatus(
@@ -711,9 +711,9 @@ void ConversationDriver::OnPremiumStatusReceived(
   std::move(parent_callback).Run(premium_status);
 }
 
-void ConversationDriver::OnRequestPending() {
+void ConversationDriver::OnConversationEntryPending() {
   for (auto& obs : observers_) {
-    obs.OnRequestPending();
+    obs.OnConversationEntryPending();
   }
 }
 

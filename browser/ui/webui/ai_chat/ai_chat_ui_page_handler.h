@@ -92,7 +92,7 @@ class AIChatUIPageHandler : public ai_chat::mojom::PageHandler,
       mojom::AutoGenerateQuestionsPref auto_generate) override;
   void OnFaviconImageDataChanged() override;
   void OnPageHasContent(bool page_contents_is_truncated) override;
-  void OnRequestPending() override;
+  void OnConversationEntryPending() override;
 
   void GetFaviconImageData(GetFaviconImageDataCallback callback) override;
   mojom::SiteInfo BuildSiteInfo();

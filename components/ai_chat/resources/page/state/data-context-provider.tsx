@@ -270,7 +270,7 @@ function DataContextProvider (props: DataContextProviderProps) {
       setCurrentModelKey(modelKey)
     })
 
-    getPageHandlerInstance().callbackRouter.onRequestPending.addListener(() => {
+    getPageHandlerInstance().callbackRouter.onConversationEntryPending.addListener(() => {
       setShowAgreementModal(true)
     })
 

@@ -89,8 +89,13 @@ void AIChatUIPageHandler::SetClientPage(
     mojo::PendingRemote<ai_chat::mojom::ChatUIPage> page) {
   page_.Bind(std::move(page));
 
-  if (active_chat_tab_helper_ && active_chat_tab_helper_->HasPendingRequest()) {
-    OnRequestPending();
+  // Trigger the observer because there might be a pending conversation entry.
+  // In some cases, this page handler hasn't been created and remote might not
+  // have been set yet, ensuring that we don't miss any UI updates, we trigger
+  // the observer again.
+  if (active_chat_tab_helper_ &&
+      active_chat_tab_helper_->HasPendingConversationEntry()) {
+    OnConversationEntryPending();
   }
 }
 
@@ -399,9 +404,9 @@ void AIChatUIPageHandler::OnPageHasContent(bool page_contents_is_truncated) {
   }
 }
 
-void AIChatUIPageHandler::OnRequestPending() {
+void AIChatUIPageHandler::OnConversationEntryPending() {
   if (page_.is_bound()) {
-    page_->OnRequestPending();
+    page_->OnConversationEntryPending();
   }
 }
 
