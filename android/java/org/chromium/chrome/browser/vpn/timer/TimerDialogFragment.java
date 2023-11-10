@@ -23,12 +23,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.chromium.chrome.R;
+import org.chromium.chrome.browser.vpn.timer.TimerItemAdapter;
+import org.chromium.chrome.browser.vpn.timer.TimerUtils;
+import org.chromium.chrome.browser.vpn.utils.BraveVpnProfileUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TimerDialogFragment extends BottomSheetDialogFragment {
+public class TimerDialogFragment
+        extends BottomSheetDialogFragment implements TimerItemAdapter.TimerItemClickListener {
     public static final String TAG = TimerDialogFragment.class.getName();
 
     @Nullable
@@ -44,19 +48,44 @@ public class TimerDialogFragment extends BottomSheetDialogFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<TimerItemModel> timerItemModels = new ArrayList<>(Arrays.asList(
                 new TimerItemModel(requireContext().getString(R.string.pause_for_15_minutes),
-                        R.drawable.ic_pause_filled),
+                        R.drawable.ic_pause_filled, TimerItemModel.TimerDuration.MINUTES_15),
                 new TimerItemModel(requireContext().getString(R.string.pause_for_1_hour),
-                        R.drawable.ic_pause_filled),
-                new TimerItemModel(
-                        requireContext().getString(R.string.disable), R.drawable.ic_disabled)));
-        recyclerView.setAdapter(new TimerItemAdapter(timerItemModels));
+                        R.drawable.ic_pause_filled, TimerItemModel.TimerDuration.MINUTES_60),
+                new TimerItemModel(requireContext().getString(R.string.disable),
+                        R.drawable.ic_disabled, TimerItemModel.TimerDuration.NONE)));
+        recyclerView.setAdapter(new TimerItemAdapter(timerItemModels, TimerDialogFragment.this));
 
         View cancelView = view.findViewById(R.id.cancel_view);
         TextView timerActionText = cancelView.findViewById(R.id.timer_action_text);
         ImageView timerActionImage = cancelView.findViewById(R.id.timer_action_image);
-        TimerItemModel timerItemModel = new TimerItemModel(
-                requireContext().getString(android.R.string.cancel), R.drawable.ic_cancel_filled);
+        TimerItemModel timerItemModel =
+                new TimerItemModel(requireContext().getString(android.R.string.cancel),
+                        R.drawable.ic_cancel_filled, TimerItemModel.TimerDuration.CANCEL);
         timerActionText.setText(timerItemModel.getActionText());
         timerActionImage.setImageResource(timerItemModel.getActionImage());
+    }
+
+    @Override
+    public void onTimerItemClick(TimerItemModel timerItemModel) {
+        if (getActivity() == null) {
+            return;
+        }
+
+        switch (timerItemModel.getTimerDuration()) {
+            case MINUTES_15:
+                BraveVpnProfileUtils.getInstance().stopVpn(getActivity());
+                TimerUtils.scheduleVpnAction(
+                        getActivity(), timerItemModel.getTimerDuration().getMinutes());
+                break;
+            case MINUTES_60:
+                BraveVpnProfileUtils.getInstance().stopVpn(getActivity());
+                TimerUtils.scheduleVpnAction(
+                        getActivity(), timerItemModel.getTimerDuration().getMinutes());
+                break;
+            case NONE:
+                BraveVpnProfileUtils.getInstance().stopVpn(getActivity());
+                break;
+        }
+        dismiss();
     }
 }
