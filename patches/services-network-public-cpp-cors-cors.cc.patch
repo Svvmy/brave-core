@@ -1,8 +1,8 @@
 diff --git a/services/network/public/cpp/cors/cors.cc b/services/network/public/cpp/cors/cors.cc
-index 391588c14d4ac182a60e525bd811211c75163ced..0782d710418416b0b90c9e4ad66ffc5c1bc42ca7 100644
+index 85710e17b4b5756c3072c41bf081b58aa4dcc2e4..6137636ab729ff52e90a6e124dab1b20ed72d18f 100644
 --- a/services/network/public/cpp/cors/cors.cc
 +++ b/services/network/public/cpp/cors/cors.cc
-@@ -326,6 +326,7 @@ bool IsCorsSafelistedHeader(const std::string& name, const std::string& value) {
+@@ -335,6 +335,7 @@ bool IsCorsSafelistedHeader(const std::string& name, const std::string& value) {
        "sec-ch-ua-mobile",
        "sec-ch-ua-full-version",
        "sec-ch-ua-platform-version",

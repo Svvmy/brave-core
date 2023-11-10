@@ -1,8 +1,8 @@
 diff --git a/content/browser/renderer_host/navigation_request.cc b/content/browser/renderer_host/navigation_request.cc
-index 5802b4d5222312057a1ad6f028b517daea66a62a..3df3b0a8b4d76e46d81792cc201ef49abddb7043 100644
+index 69a108c723a03b63a4ac5422a9333e9b06ad828b..96487c5a1da5ef87562748e13da86c8a34ac41ac 100644
 --- a/content/browser/renderer_host/navigation_request.cc
 +++ b/content/browser/renderer_host/navigation_request.cc
-@@ -3255,6 +3255,7 @@ void NavigationRequest::OnRequestRedirected(
+@@ -3257,6 +3257,7 @@ void NavigationRequest::OnRequestRedirected(
    common_params_->url = redirect_info.new_url;
    common_params_->method = redirect_info.new_method;
    common_params_->referrer->url = GURL(redirect_info.new_referrer);
