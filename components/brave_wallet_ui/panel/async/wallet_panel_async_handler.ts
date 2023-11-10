@@ -12,7 +12,6 @@ import {
   BraveWallet,
   WalletPanelState,
   PanelState,
-  WalletRoutes,
   PanelTypes
 } from '../../constants/types'
 import {
@@ -196,11 +195,6 @@ handler.on(PanelActions.navigateToMain.type, async (store: Store) => {
   // persist navigation state
   const selectedPanel = store.getState().panel?.selectedPanel
   storeCurrentAndPreviousPanel('main', selectedPanel)
-})
-
-handler.on(PanelActions.navigateBack.type, async (store: Store) => {
-  const { lastSelectedPanel, selectedPanel } = store.getState().panel || {}
-  storeCurrentAndPreviousPanel(lastSelectedPanel || 'main', selectedPanel)
 })
 
 handler.on(
@@ -735,36 +729,6 @@ handler.on(PanelActions.setupWallet.type, async (store) => {
       console.error('tabs.create failed: ' + chrome.runtime.lastError.message)
     }
   })
-})
-
-handler.on(PanelActions.expandWallet.type, async (store) => {
-  chrome.tabs.create({ url: 'chrome://wallet/crypto' }, () => {
-    if (chrome.runtime.lastError) {
-      console.error('tabs.create failed: ' + chrome.runtime.lastError.message)
-    }
-  })
-})
-
-handler.on(PanelActions.expandWalletAccounts.type, async (store) => {
-  chrome.tabs.create(
-    { url: `chrome://wallet${WalletRoutes.AddAccountModal}` },
-    () => {
-      if (chrome.runtime.lastError) {
-        console.error('tabs.create failed: ' + chrome.runtime.lastError.message)
-      }
-    }
-  )
-})
-
-handler.on(PanelActions.expandWalletAddAsset.type, async (store) => {
-  chrome.tabs.create(
-    { url: `chrome://wallet${WalletRoutes.AddAssetModal}` },
-    () => {
-      if (chrome.runtime.lastError) {
-        console.error('tabs.create failed: ' + chrome.runtime.lastError.message)
-      }
-    }
-  )
 })
 
 handler.on(PanelActions.openWalletSettings.type, async (store) => {
