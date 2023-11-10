@@ -7,7 +7,6 @@
 
 #include <string_view>
 #include <vector>
-#include "stdio.h"
 
 #include "base/containers/fixed_flat_set.h"
 #include "base/linux_util.h"
