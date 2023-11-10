@@ -1,5 +1,5 @@
 diff --git a/chrome/android/BUILD.gn b/chrome/android/BUILD.gn
-index 799d9cab9c7485b9e65ac0cf6a6b94e20e9b27e6..f6d5e2cc38d495db7f617281bc64c789f2f5becd 100644
+index 6c395b2d20bda9ff0fe6a49b62fd310341176778..53682f9364551d9e8a1aa36158ef22d8a4111154 100644
 --- a/chrome/android/BUILD.gn
 +++ b/chrome/android/BUILD.gn
 @@ -170,6 +170,7 @@ if (current_toolchain == default_toolchain) {
@@ -42,7 +42,7 @@ index 799d9cab9c7485b9e65ac0cf6a6b94e20e9b27e6..f6d5e2cc38d495db7f617281bc64c789
    }
  
    action_with_pydeps("chrome_android_java_google_api_keys_srcjar") {
-@@ -2174,6 +2179,7 @@ if (current_toolchain == default_toolchain) {
+@@ -2175,6 +2180,7 @@ if (current_toolchain == default_toolchain) {
        "java/res_chromium_base/mipmap-xxxhdpi/layered_app_icon_background.png",
        "java/res_chromium_base/values/channel_constants.xml",
      ]
@@ -50,7 +50,7 @@ index 799d9cab9c7485b9e65ac0cf6a6b94e20e9b27e6..f6d5e2cc38d495db7f617281bc64c789
  
      # Dep needed to ensure override works properly.
      deps = [ ":chrome_base_module_resources" ]
-@@ -2386,6 +2392,7 @@ if (current_toolchain == default_toolchain) {
+@@ -2387,6 +2393,7 @@ if (current_toolchain == default_toolchain) {
          ":${_variant}_locale_pak_assets",
          ":${_variant}_paks",
        ]
@@ -58,7 +58,7 @@ index 799d9cab9c7485b9e65ac0cf6a6b94e20e9b27e6..f6d5e2cc38d495db7f617281bc64c789
        if (_is_monochrome) {
          deps += [ "//android_webview:locale_pak_assets" ]
        }
-@@ -2650,6 +2657,7 @@ if (current_toolchain == default_toolchain) {
+@@ -2651,6 +2658,7 @@ if (current_toolchain == default_toolchain) {
        "//components/payments/content/android:service_java",
        "//third_party/androidx:androidx_browser_browser_java",
      ]
@@ -66,7 +66,7 @@ index 799d9cab9c7485b9e65ac0cf6a6b94e20e9b27e6..f6d5e2cc38d495db7f617281bc64c789
  
      # More deps for DFMs.
      if (dfmify_dev_ui) {
-@@ -3691,6 +3699,7 @@ generate_jni("chrome_jni_headers") {
+@@ -3692,6 +3700,7 @@ generate_jni("chrome_jni_headers") {
      "java/src/org/chromium/chrome/browser/webapps/WebApkUpdateManager.java",
      "java/src/org/chromium/chrome/browser/webapps/WebappRegistry.java",
    ]

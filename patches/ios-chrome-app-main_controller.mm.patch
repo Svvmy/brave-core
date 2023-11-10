@@ -1,5 +1,5 @@
 diff --git a/ios/chrome/app/main_controller.mm b/ios/chrome/app/main_controller.mm
-index d776bc2c882434def3cf70afd40ea12edea3e2ca..d71322f9f61252dd5f600edc9f49143648418bd3 100644
+index 0dd47928bdbd1960f1238baf702945d6c9d6d756..ce06edc5bca566f3f6f0a0b6efc191d577edb09b 100644
 --- a/ios/chrome/app/main_controller.mm
 +++ b/ios/chrome/app/main_controller.mm
 @@ -140,6 +140,9 @@
