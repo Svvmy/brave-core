@@ -35,6 +35,12 @@ public class TimerDialogFragment
         extends BottomSheetDialogFragment implements TimerItemAdapter.TimerItemClickListener {
     public static final String TAG = TimerDialogFragment.class.getName();
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NORMAL, R.style.TimerBottomSheetDialogTheme);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -52,17 +58,10 @@ public class TimerDialogFragment
                 new TimerItemModel(requireContext().getString(R.string.pause_for_1_hour),
                         R.drawable.ic_pause_filled, TimerItemModel.TimerDuration.MINUTES_60),
                 new TimerItemModel(requireContext().getString(R.string.disable),
-                        R.drawable.ic_disabled, TimerItemModel.TimerDuration.NONE)));
-        recyclerView.setAdapter(new TimerItemAdapter(timerItemModels, TimerDialogFragment.this));
-
-        View cancelView = view.findViewById(R.id.cancel_view);
-        TextView timerActionText = cancelView.findViewById(R.id.timer_action_text);
-        ImageView timerActionImage = cancelView.findViewById(R.id.timer_action_image);
-        TimerItemModel timerItemModel =
+                        R.drawable.ic_disabled, TimerItemModel.TimerDuration.NONE),
                 new TimerItemModel(requireContext().getString(android.R.string.cancel),
-                        R.drawable.ic_cancel_filled, TimerItemModel.TimerDuration.CANCEL);
-        timerActionText.setText(timerItemModel.getActionText());
-        timerActionImage.setImageResource(timerItemModel.getActionImage());
+                        R.drawable.ic_cancel_filled, TimerItemModel.TimerDuration.CANCEL)));
+        recyclerView.setAdapter(new TimerItemAdapter(timerItemModels, TimerDialogFragment.this));
     }
 
     @Override
