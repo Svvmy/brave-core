@@ -271,6 +271,13 @@ bool ConversationDriver::MaybePopPendingRequests() {
     return false;
   }
 
+  // We don't discard requests related to summarization until we have the
+  // article text.
+  if (article_text_.empty() &&
+      base::Contains(pending_request_->text, "Summarize")) {
+    return false;
+  }
+
   mojom::ConversationTurn request = std::move(*pending_request_);
   pending_request_.reset();
   MakeAPIRequestWithConversationHistoryUpdate(std::move(request));
@@ -280,9 +287,12 @@ bool ConversationDriver::MaybePopPendingRequests() {
 void ConversationDriver::MaybeGeneratePageText() {
   const GURL url = GetPageURL();
 
+  // Call this observer in-case we early return
+  // ex. a listener in the UI might expect siteInfo or its related property to
+  // change
+  OnPageHasContentChanged(false);
+
   if (!base::Contains(kAllowedSchemes, url.scheme())) {
-    // Final decision, convey to observers
-    OnPageHasContentChanged(false);
     return;
   }
 
@@ -369,6 +379,8 @@ void ConversationDriver::OnPageContentRetrieved(int64_t navigation_id,
                 : l10n_util::GetStringUTF8(IDS_CHAT_UI_SUMMARIZE_PAGE));
   OnSuggestedQuestionsChanged();
   MaybeGenerateQuestions();
+  // We check again to see if any page content related prompt is pending
+  MaybePopPendingRequests();
 }
 
 void ConversationDriver::CleanUp() {

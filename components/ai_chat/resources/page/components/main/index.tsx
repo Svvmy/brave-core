@@ -65,7 +65,7 @@ function Main() {
   let currentErrorElement = null
 
   if (hasAcceptedAgreement) {
-    if (siteInfo) {
+    if (siteInfo?.title) {
       siteTitleElement = <SiteTitle />
     }
 

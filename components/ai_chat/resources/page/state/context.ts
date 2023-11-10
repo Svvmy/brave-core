@@ -16,7 +16,7 @@ export interface AIChatContext {
   canGenerateQuestions: boolean
   hasAcceptedAgreement: boolean
   userAutoGeneratePref: mojom.AutoGenerateQuestionsPref | undefined
-  siteInfo?: mojom.SiteInfo | null
+  siteInfo: mojom.SiteInfo | undefined
   favIconUrl: string | undefined
   currentError: mojom.APIError | undefined
   apiHasError: boolean

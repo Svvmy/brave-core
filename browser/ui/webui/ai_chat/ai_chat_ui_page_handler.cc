@@ -172,9 +172,7 @@ void AIChatUIPageHandler::GetSiteInfo(GetSiteInfoCallback callback) {
   auto site_info = BuildSiteInfo();
   const bool is_fetching_content = active_chat_tab_helper_->HasPageContent() ==
                                    PageContentAssociation::FETCHING_CONTENT;
-  std::move(callback).Run(is_fetching_content, site_info.has_value()
-                                                   ? site_info.value().Clone()
-                                                   : nullptr);
+  std::move(callback).Run(is_fetching_content, site_info.Clone());
 }
 
 void AIChatUIPageHandler::OpenBraveLeoSettings() {
@@ -397,9 +395,7 @@ void AIChatUIPageHandler::OnPageHasContent(bool page_contents_is_truncated) {
         !active_chat_tab_helper_->web_contents()
              ->IsDocumentOnLoadCompletedInPrimaryMainFrame();
     auto site_info = BuildSiteInfo();
-    page_->OnSiteInfoChanged(
-        is_fetching_content,
-        site_info.has_value() ? site_info.value().Clone() : nullptr);
+    page_->OnSiteInfoChanged(is_fetching_content, site_info.Clone());
   }
 }
 
@@ -441,19 +437,20 @@ void AIChatUIPageHandler::GetFaviconImageData(
       &favicon_task_tracker_);
 }
 
-absl::optional<mojom::SiteInfo> AIChatUIPageHandler::BuildSiteInfo() {
-  if (active_chat_tab_helper_ && active_chat_tab_helper_->HasPageContent() ==
-                                     PageContentAssociation::HAS_CONTENT) {
-    mojom::SiteInfo site_info;
-    site_info.title =
-        base::UTF16ToUTF8(active_chat_tab_helper_->web_contents()->GetTitle());
-    site_info.is_content_truncated =
-        active_chat_tab_helper_->IsPageContentsTruncated();
-
-    return site_info;
-  }
-
-  return absl::nullopt;
+mojom::SiteInfo AIChatUIPageHandler::BuildSiteInfo() {
+  bool has_content = active_chat_tab_helper_->HasPageContent() ==
+                     PageContentAssociation::HAS_CONTENT;
+  mojom::SiteInfo site_info;
+  site_info.title =
+      has_content ? base::UTF16ToUTF8(
+                        active_chat_tab_helper_->web_contents()->GetTitle())
+                  : std::string();
+  site_info.is_content_truncated =
+      active_chat_tab_helper_->IsPageContentsTruncated();
+  site_info.is_content_present = active_chat_tab_helper_->web_contents()
+                                     ->GetLastCommittedURL()
+                                     .SchemeIsHTTPOrHTTPS();
+  return site_info;
 }
 
 void AIChatUIPageHandler::OnVisibilityChanged(content::Visibility visibility) {

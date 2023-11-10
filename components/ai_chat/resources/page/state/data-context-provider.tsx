@@ -35,9 +35,8 @@ function DataContextProvider (props: DataContextProviderProps) {
   const [canGenerateQuestions, setCanGenerateQuestions] = React.useState(false)
   const [userAutoGeneratePref, setUserAutoGeneratePref] = React.useState<mojom.AutoGenerateQuestionsPref>()
   // undefined for nothing received yet
-  // null for no site info
   // mojom.SiteInfo for valid site info
-  const [siteInfo, setSiteInfo] = React.useState<mojom.SiteInfo | null | undefined>(undefined)
+  const [siteInfo, setSiteInfo] = React.useState<mojom.SiteInfo | undefined>()
   const [favIconUrl, setFavIconUrl] = React.useState<string>()
   const [currentError, setCurrentError] = React.useState<mojom.APIError>(mojom.APIError.None)
   const [hasAcceptedAgreement, setHasAcceptedAgreement] = React.useState(loadTimeData.getBoolean("hasAcceptedAgreement"))
@@ -76,7 +75,7 @@ function DataContextProvider (props: DataContextProviderProps) {
   // Wait to show model intro until we've received SiteInfo information
   // (valid or null) to avoid flash of content.
   const showModelIntro =
-    hasAcceptedAgreement && (hasChangedModel || siteInfo === null)
+    hasAcceptedAgreement && (hasChangedModel || siteInfo?.title === null)
 
   const getConversationHistory = () => {
     getPageHandlerInstance()
@@ -103,7 +102,7 @@ function DataContextProvider (props: DataContextProviderProps) {
     getPageHandlerInstance().pageHandler.generateQuestions()
   }
 
-  const handleSiteInfo = (isFetching: boolean, siteInfo: mojom.SiteInfo | null) => {
+  const handleSiteInfo = (isFetching: boolean, siteInfo: mojom.SiteInfo | undefined) => {
     // null siteInfo for no content
     // true isFetching for unknown yet
     if (!isFetching) {

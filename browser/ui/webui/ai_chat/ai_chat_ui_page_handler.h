@@ -95,7 +95,7 @@ class AIChatUIPageHandler : public ai_chat::mojom::PageHandler,
   void OnRequestPending() override;
 
   void GetFaviconImageData(GetFaviconImageDataCallback callback) override;
-  absl::optional<mojom::SiteInfo> BuildSiteInfo();
+  mojom::SiteInfo BuildSiteInfo();
 
   mojo::Remote<ai_chat::mojom::ChatUIPage> page_;
 

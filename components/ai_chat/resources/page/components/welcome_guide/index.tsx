@@ -40,7 +40,7 @@ function WelcomeGuide() {
       </h2>
       <div className={`${styles.card} ${styles.siteHelpCard}`}>
         <h4 className={styles.cardTitle}>{getLocale('siteHelpCardTitle')}</h4>
-        {context.siteInfo ? (
+        {context.siteInfo?.isContentPresent ? (
           <>
             <p>{getLocale('siteHelpCardDescWithAction')}</p>
             <div className={styles.actions}>
