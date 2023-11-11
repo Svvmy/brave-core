@@ -26,6 +26,7 @@
 #include "brave/components/p3a/p3a_config.h"
 #include "brave/components/p3a/p3a_service.h"
 #include "brave/ios/app/brave_main_delegate.h"
+#include "brave/ios/browser/api/ai_chat/ai_chat_factory+private.h"
 #include "brave/ios/browser/api/bookmarks/brave_bookmarks_api+private.h"
 #include "brave/ios/browser/api/brave_shields/adblock_service+private.h"
 #include "brave/ios/browser/api/brave_stats/brave_stats+private.h"
@@ -100,6 +101,7 @@ const BraveCoreLogSeverity BraveCoreLogSeverityVerbose =
   scoped_refptr<p3a::P3AService> _p3a_service;
   scoped_refptr<p3a::HistogramsBraveizer> _histogram_braveizer;
 }
+@property(nonatomic) AIChatFactoryAPI* aiChatFactoryAPI;
 @property(nonatomic) BraveBookmarksAPI* bookmarksAPI;
 @property(nonatomic) BraveHistoryAPI* historyAPI;
 @property(nonatomic) BravePasswordAPI* passwordAPI;
@@ -239,6 +241,7 @@ const BraveCoreLogSeverity BraveCoreLogSeverityVerbose =
 }
 
 - (void)dealloc {
+  _aiChatFactoryAPI = nil;
   _bookmarksAPI = nil;
   _historyAPI = nil;
   _openTabsAPI = nil;
@@ -340,6 +343,14 @@ static bool CustomLogHandler(int severity,
 }
 
 #pragma mark -
+
+- (AIChatFactoryAPI*)aiChatFactoryAPI {
+  if (!_aiChatFactoryAPI) {
+    _aiChatFactoryAPI =
+        [[AIChatFactoryAPI alloc] initWithChromeBrowserState:_mainBrowserState];
+  }
+  return _aiChatFactoryAPI;
+}
 
 - (BraveBookmarksAPI*)bookmarksAPI {
   if (!_bookmarksAPI) {

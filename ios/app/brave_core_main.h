@@ -24,6 +24,7 @@
 @class BraveTabGeneratorAPI;
 @class WebImageDownloader;
 @class NTPBackgroundImagesService;
+@class AIChatFactoryAPI;
 @protocol IpfsAPI;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -43,6 +44,8 @@ typedef bool (^BraveCoreLogHandler)(BraveCoreLogSeverity severity,
 
 OBJC_EXPORT
 @interface BraveCoreMain : NSObject
+
+@property(nonatomic, readonly) AIChatFactoryAPI* aiChatFactoryAPI;
 
 @property(nonatomic, readonly) BraveBookmarksAPI* bookmarksAPI;
 

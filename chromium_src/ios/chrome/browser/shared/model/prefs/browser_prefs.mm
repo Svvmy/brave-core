@@ -3,9 +3,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+#include "brave/components/ai_chat/core/common/buildflags/buildflags.h"
 #include "brave/components/brave_ads/core/public/prefs/pref_registry.h"
 #include "brave/components/brave_rewards/common/pref_registry.h"
 #include "brave/components/brave_sync/brave_sync_prefs.h"
+#include "brave/components/brave_vpn/common/buildflags/buildflags.h"
 #include "brave/components/brave_wallet/browser/brave_wallet_prefs.h"
 #include "brave/components/brave_wallet/browser/keyring_service.h"
 #include "brave/components/decentralized_dns/core/utils.h"
@@ -15,8 +17,14 @@
 #include "brave/components/p3a/buildflags.h"
 #include "brave/components/p3a/p3a_service.h"
 #include "brave/components/p3a/star_randomness_meta.h"
+#include "brave/components/skus/browser/skus_utils.h"
 #include "brave/ios/browser/brave_stats/brave_stats_prefs.h"
 #include "components/pref_registry/pref_registry_syncable.h"
+
+#if BUILDFLAG(ENABLE_AI_CHAT)
+#include "brave/components/ai_chat/core/browser/ai_chat_metrics.h"
+#include "brave/components/ai_chat/core/common/pref_names.h"
+#endif
 
 #if BUILDFLAG(ENABLE_IPFS)
 #include "brave/components/ipfs/ipfs_service.h"
@@ -30,8 +38,13 @@ void BraveRegisterBrowserStatePrefs(
   brave_sync::Prefs::RegisterProfilePrefs(registry);
   brave_wallet::RegisterProfilePrefs(registry);
   brave_wallet::RegisterProfilePrefsForMigration(registry);
+
 #if BUILDFLAG(ENABLE_IPFS)
   ipfs::IpfsService::RegisterProfilePrefs(registry);
+#endif
+
+#if BUILDFLAG(ENABLE_AI_CHAT)
+  ai_chat::prefs::RegisterProfilePrefs(registry);
 #endif
 }
 
@@ -40,13 +53,24 @@ void BraveRegisterLocalStatePrefs(PrefRegistrySimple* registry) {
   brave_wallet::RegisterLocalStatePrefs(registry);
   brave_wallet::RegisterLocalStatePrefsForMigration(registry);
   decentralized_dns::RegisterLocalStatePrefs(registry);
+
+#if BUILDFLAG(ENABLE_BRAVE_VPN) || BUILDFLAG(ENABLE_AI_CHAT)
+  skus::RegisterLocalStatePrefs(registry);
+#endif
+
 #if BUILDFLAG(BRAVE_P3A_ENABLED)
   p3a::P3AService::RegisterPrefs(registry, false);
   p3a::StarRandomnessMeta::RegisterPrefsForMigration(registry);
 #endif
+
   ntp_background_images::NTPBackgroundImagesService::RegisterLocalStatePrefs(
       registry);
   brave_l10n::RegisterL10nLocalStatePrefs(registry);
+
+#if BUILDFLAG(ENABLE_AI_CHAT)
+  ai_chat::prefs::RegisterLocalStatePrefs(registry);
+  ai_chat::AIChatMetrics::RegisterPrefs(registry);
+#endif
 }
 
 #define BRAVE_REGISTER_BROWSER_STATE_PREFS \
