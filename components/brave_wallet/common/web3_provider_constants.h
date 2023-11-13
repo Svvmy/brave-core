@@ -10,17 +10,17 @@
 
 namespace brave_wallet {
 
-extern const char kConnectEvent[];
-extern const char kDisconnectEvent[];
+inline constexpr char kConnectEvent[] = "connect";
+inline constexpr char kDisconnectEvent[] = "disconnect";
 
 namespace ethereum {
-extern const char kChainChangedEvent[];
-extern const char kAccountsChangedEvent[];
-extern const char kMessageEvent[];
+inline constexpr char kChainChangedEvent[] = "chainChanged";
+inline constexpr char kAccountsChangedEvent[] = "accountsChanged";
+inline constexpr char kMessageEvent[] = "message";
 }  // namespace ethereum
 
 namespace solana {
-extern const char kAccountChangedEvent[];
+inline constexpr char kAccountChangedEvent[] = "accountChanged";
 constexpr char kConnect[] = "connect";
 constexpr char kDisconnect[] = "disconnect";
 constexpr char kSignTransaction[] = "signTransaction";
