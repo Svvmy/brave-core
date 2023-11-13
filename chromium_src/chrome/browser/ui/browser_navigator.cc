@@ -37,7 +37,14 @@ bool IsHostAllowedInIncognitoBraveImpl(const std::string_view host) {
 #define BRAVE_IS_HOST_ALLOWED_IN_INCOGNITO      \
   if (!IsHostAllowedInIncognitoBraveImpl(host)) \
     return false;
-#define BRAVE_ADJUST_NAVIGATE_PARAMS_FOR_URL UpdateBraveScheme(params);
+
+#define BRAVE_NAVIGATE                                           \
+  UpdateBraveScheme(params);                                     \
+  if (params->url.SchemeIs(content::kChromeUIUntrustedScheme) && \
+      params->url.host() == kChatUIHost) {                       \
+    return nullptr;                                              \
+  }
+
 #include "src/chrome/browser/ui/browser_navigator.cc"
-#undef BRAVE_ADJUST_NAVIGATE_PARAMS_FOR_URL
+#undef BRAVE_NAVIGATE
 #undef BRAVE_IS_HOST_ALLOWED_IN_INCOGNITO
