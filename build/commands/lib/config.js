@@ -100,6 +100,18 @@ const parseExtraInputs = (inputs, accumulator, callback) => {
   }
 }
 
+const getBraveVersion = (useFullVersionValue) => {
+  const braveVersion = packageConfig(['version'])
+  if (useFullVersionValue) {
+    return braveVersion
+  }
+
+  const braveVersionParts = braveVersion.split('.')
+  assert(braveVersionParts.length == 3)
+  braveVersionParts[2] = '0'
+  return braveVersionParts.join('.')
+}
+
 const Config = function () {
   this.defaultBuildConfig = 'Component'
   this.buildConfig = this.defaultBuildConfig
@@ -179,7 +191,8 @@ const Config = function () {
   this.rewardsGrantDevEndpoint = getNPMConfig(['rewards_grant_dev_endpoint']) || ''
   this.rewardsGrantStagingEndpoint = getNPMConfig(['rewards_grant_staging_endpoint']) || ''
   this.rewardsGrantProdEndpoint = getNPMConfig(['rewards_grant_prod_endpoint']) || ''
-  this.braveVersion = packageConfig(['version'])
+  this.useFullVersionValue = this.isBraveReleaseBuild() || getNPMConfig(['use_full_version_value']) || false
+  this.braveVersion = getBraveVersion(this.useFullVersionValue)
   this.androidOverrideVersionName = this.braveVersion
   this.releaseTag = this.braveVersion.split('+')[0]
   this.mac_signing_identifier = getNPMConfig(['mac_signing_identifier'])

@@ -45,11 +45,14 @@ function updateChromeVersion() {
     .join('.')
     .replace(/[A-Z=]/g, '')
   const newVersionFileContent = versionLines.join('\n')
+  const fullVersionValueInfo = config.useFullVersionValue
+    ? ''
+    : ' (PATCH=0 for dev builds)'
   if (newVersionFileContent !== versionFileContent) {
     fs.writeFileSync(versionFilePath, newVersionFileContent)
-    Log.status(`Set chrome/VERSION: ${versionToLog}`)
+    Log.status(`Set chrome/VERSION: ${versionToLog}${fullVersionValueInfo}`)
   } else {
-    console.log(`chrome/VERSION: ${versionToLog}`)
+    console.log(`chrome/VERSION: ${versionToLog}${fullVersionValueInfo}`)
   }
 }
 
